@@ -1,71 +1,52 @@
 <template>
   <DemoGate>
-    <section class="mb-10 text-center sm:text-right">
-      <p class="mb-2 text-sm font-medium text-baax-purple-600">
-        ابزار مدیریت صندوق — نه بانک
-      </p>
-      <h1 class="text-3xl font-bold text-baax-blue-900 sm:text-4xl">
-        صندوق‌های گروهی، شفاف و ساده
-      </h1>
-      <p class="mx-auto mt-4 max-w-2xl text-baax-blue-600 sm:mx-0">
-        باکس به اعضای صندوق کمک می‌کند قرعه‌کشی و پس‌انداز/وام را با دفترکل
-        جداگانه، وثیقهٔ الکترونیک و قوانین تأخیر شفاف مدیریت کنند.
-      </p>
-      <div class="mt-6 flex flex-wrap justify-center gap-3 sm:justify-start">
-        <NuxtLink to="/fund/rosca-12" class="btn-primary">
-          مشاهدهٔ صندوق نمونه
-        </NuxtLink>
-        <NuxtLink to="/ledger" class="btn-secondary"> دفترکل </NuxtLink>
+    <header class="mb-6 flex flex-wrap items-end justify-between gap-4">
+      <div>
+        <h1 class="text-2xl font-bold text-baax-blue-900">{{ memberProfile.name }}</h1>
+        <p class="text-sm text-baax-blue-500">صندوق‌های من</p>
       </div>
-    </section>
+      <NuxtLink to="/quick-buy" class="text-sm text-baax-blue-600 hover:text-baax-purple-600">
+        خرید زودهنگام
+      </NuxtLink>
+    </header>
 
-    <section class="mb-10 grid gap-4 sm:grid-cols-3">
+    <section class="mb-6 grid gap-4 sm:grid-cols-3">
       <div class="card">
-        <h3 class="font-semibold text-baax-blue-900">قرعه‌کشی (ROSCA)</h3>
-        <p class="mt-2 text-sm text-baax-blue-600">
-          یک برنده در هر دورهٔ ماهانه. برندگان قابل جایگزینی نیستند.
+        <p class="stat-label">پرداخت بعدی</p>
+        <p class="mt-1 text-lg font-bold text-baax-blue-900">
+          {{ formatToman(memberProfile.nextPaymentAmount) }}
+        </p>
+        <p class="mt-1 text-xs text-baax-blue-500">{{ memberProfile.nextPaymentDate }}</p>
+      </div>
+      <div class="card">
+        <p class="stat-label">وضعیت</p>
+        <p class="mt-2">
+          <span
+            class="rounded-full border px-2.5 py-0.5 text-xs font-medium"
+            :class="paymentStatusClasses(memberProfile.status)"
+          >
+            {{ paymentStatusLabel(memberProfile.status) }}
+          </span>
         </p>
       </div>
       <div class="card">
-        <h3 class="font-semibold text-baax-blue-900">پس‌انداز/وام</h3>
-        <p class="mt-2 text-sm text-baax-blue-600">
-          سقف وام، حق عضویت و قسط — هر کدام فیلد جدا در UI.
-        </p>
-      </div>
-      <div class="card">
-        <h3 class="font-semibold text-baax-blue-900">دفترکل per-fund</h3>
-        <p class="mt-2 text-sm text-baax-blue-600">
-          هر صندوق دفترکل مستقل. درآمد پلتفرم فقط کارمزد.
-        </p>
+        <p class="stat-label">صندوق‌های فعال</p>
+        <p class="mt-1 text-lg font-bold text-baax-purple-600">{{ myFunds.length }}</p>
       </div>
     </section>
 
     <section>
-      <div class="mb-4 flex items-center justify-between">
-        <h2 class="section-title">صندوق‌های فعال</h2>
-        <span class="text-sm text-baax-blue-500">{{ funds.length }} صندوق</span>
-      </div>
+      <h2 class="section-title mb-4">صندوق‌ها</h2>
       <div class="grid gap-4 md:grid-cols-2">
-        <FundCard v-for="fund in funds" :key="fund.id" :fund="fund" />
-      </div>
-    </section>
-
-    <section
-      class="card mt-10 border-dashed border-baax-purple-200 bg-gradient-to-l from-baax-purple-500/5 to-transparent"
-    >
-      <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <div>
-          <h3 class="font-bold text-baax-blue-900">خرید زودهنگام</h3>
-          <p class="mt-1 text-sm text-baax-blue-600">
-            پس از برد، ابتدا بدهی به Snapp Pay / دیجی‌کالا / Tara، سپس نقد
-          </p>
-        </div>
-        <NuxtLink to="/quick-buy" class="btn-primary shrink-0"> مشاهدهٔ mock </NuxtLink>
+        <FundCard v-for="fund in myFunds" :key="fund.id" :fund="fund" />
       </div>
     </section>
   </DemoGate>
 </template>
 
 <script setup lang="ts">
-import { funds } from "~/data/mock";
+import { formatToman, getMemberFunds, memberProfile } from "~/data/mock";
+import { paymentStatusClasses, paymentStatusLabel } from "~/utils";
+
+const myFunds = getMemberFunds();
 </script>

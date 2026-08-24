@@ -5,9 +5,5 @@ export function useDemo() {
     isLoggedIn.value = true;
   }
 
-  return {
-    isLoggedIn,
-    login,
-    userName: "کاربر دمو",
-  };
+  return { isLoggedIn, login };
 }
