@@ -8,7 +8,7 @@
   }
 
   body {
-    @apply bg-baax-blue-50 text-baax-blue-900 antialiased;
+    @apply bg-baax-blue-50 text-baax-blue-900 antialiased font-sans;
   }
 }
 
