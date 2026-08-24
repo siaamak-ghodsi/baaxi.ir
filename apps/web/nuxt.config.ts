@@ -3,11 +3,15 @@ export default defineNuxtConfig({
   compatibilityDate: "2024-11-01",
   devtools: { enabled: false },
 
+  ssr: false,
+
   modules: ["@nuxtjs/tailwindcss"],
 
   css: ["~/assets/css/main.css"],
 
   app: {
+    // Project Pages: https://<user>.github.io/baaxi.ir/
+    baseURL: "/baaxi.ir/",
     head: {
       htmlAttrs: { dir: "rtl", lang: "fa" },
       title: "باکس — مدیریت صندوق",
@@ -27,7 +31,7 @@ export default defineNuxtConfig({
   },
 
   nitro: {
-    preset: "netlify",
+    preset: "github_pages",
     prerender: {
       crawlLinks: true,
       routes: [

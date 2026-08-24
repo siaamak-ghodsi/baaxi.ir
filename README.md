@@ -4,11 +4,19 @@
 
 نام UI فقط **باکس** است. قوانین محصول در [`docs/PRODUCT.md`](docs/PRODUCT.md).
 
+## مشاهدهٔ دمو روی GitHub Pages
+
+پس از فعال‌سازی Pages توسط maintainer (Settings → Pages → Source: **GitHub Actions**):
+
+**https://siaamak-ghodsi.github.io/baaxi.ir/**
+
+هر push به `main` workflow [`.github/workflows/pages.yml`](.github/workflows/pages.yml) را اجرا می‌کند و سایت استاتیک را deploy می‌کند.
+
 ## ساختار monorepo
 
 ```
 .
-├── apps/web/          # Nuxt 3 + TypeScript + Tailwind
+├── apps/web/          # Nuxt 3 + TypeScript + Tailwind (static SPA)
 ├── docs/PRODUCT.md    # قوانین قفل‌شدهٔ محصول
 └── package.json       # npm workspaces
 ```
@@ -21,51 +29,35 @@ npm install
 npx nuxi dev
 ```
 
-یا:
+یا از ریشه:
 
 ```bash
 npm install
 npm run dev
 ```
 
-مرورگر: [http://localhost:3000](http://localhost:3000)
+مرورگر: [http://localhost:3000/baaxi.ir/](http://localhost:3000/baaxi.ir/) (با `baseURL` پروژه)
 
-## build
-
-```bash
-cd apps/web
-npm run build
-```
-
-خروجی Nitro با preset `netlify`: فایل‌های استاتیک در `dist/` و توابع SSR در `.netlify/functions-internal/`.
-
-## استقرار روی Netlify
-
-فایل [`netlify.toml`](netlify.toml) در ریشهٔ repo تنظیم شده است:
-
-```toml
-[build]
-  base = "apps/web"
-  command = "npm install && npm run build"
-  publish = "dist"
-```
-
-1. repo را در Netlify وصل کنید (یا `netlify deploy --build`)
-2. Netlify به‌طور خودکار `netlify.toml` را می‌خواند — نیازی به تنظیم دستی build نیست
-3. **Node version:** 20 (در `netlify.toml` تنظیم شده)
-
-برای پیش‌نمایش محلی پس از build:
+## generate (استatic برای GitHub Pages)
 
 ```bash
 cd apps/web
-npx nuxi preview
+npm run generate
 ```
 
-یا با Netlify CLI:
+خروجی: `apps/web/.output/public`
+
+یا از ریشه:
+
+```bash
+npm run generate
+```
+
+پیش‌نمایش محلی:
 
 ```bash
 cd apps/web
-npx netlify deploy --build
+npx serve .output/public
 ```
 
 ## صفحات دمو
