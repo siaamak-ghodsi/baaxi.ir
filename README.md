@@ -37,19 +37,35 @@ cd apps/web
 npm run build
 ```
 
-خروجی Nitro با preset `cloudflare-pages` در `.output/` ساخته می‌شود.
+خروجی Nitro با preset `netlify`: فایل‌های استاتیک در `dist/` و توابع SSR در `.netlify/functions-internal/`.
 
-## استقرار روی Cloudflare Pages
+## استقرار روی Netlify
 
-1. **Build command:** `cd apps/web && npm install && npm run build`
-2. **Build output directory:** `apps/web/dist`
-3. **Node version:** 18+
+فایل [`netlify.toml`](netlify.toml) در ریشهٔ repo تنظیم شده است:
+
+```toml
+[build]
+  base = "apps/web"
+  command = "npm install && npm run build"
+  publish = "dist"
+```
+
+1. repo را در Netlify وصل کنید (یا `netlify deploy --build`)
+2. Netlify به‌طور خودکار `netlify.toml` را می‌خواند — نیازی به تنظیم دستی build نیست
+3. **Node version:** 20 (در `netlify.toml` تنظیم شده)
 
 برای پیش‌نمایش محلی پس از build:
 
 ```bash
 cd apps/web
 npx nuxi preview
+```
+
+یا با Netlify CLI:
+
+```bash
+cd apps/web
+npx netlify deploy --build
 ```
 
 ## صفحات دمو

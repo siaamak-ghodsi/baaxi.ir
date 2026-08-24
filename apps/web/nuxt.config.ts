@@ -27,7 +27,7 @@ export default defineNuxtConfig({
   },
 
   nitro: {
-    preset: "cloudflare-pages",
+    preset: "netlify",
     prerender: {
       crawlLinks: true,
       routes: [
