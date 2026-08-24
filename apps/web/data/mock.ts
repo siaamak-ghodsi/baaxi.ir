@@ -210,6 +210,16 @@ export function getMemberFunds(): Fund[] {
   return funds.filter((f) => memberFundIds.includes(f.id));
 }
 
+export function getMemberFundsForUser(joinedFundIds: string[]): Fund[] {
+  return funds.filter((f) => joinedFundIds.includes(f.id));
+}
+
+export function getBrowsableFunds(joinedFundIds: string[]): Fund[] {
+  return funds.filter(
+    (f) => !joinedFundIds.includes(f.id) && f.filledSeats < f.memberCount
+  );
+}
+
 export function getOrganizerFunds(name = "سیاامک غ."): Fund[] {
   return funds.filter((f) => f.organizerName === name);
 }

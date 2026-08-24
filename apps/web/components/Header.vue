@@ -1,21 +1,15 @@
 <template>
   <header class="sticky top-0 z-50 border-b border-baax-blue-100 bg-white/95 backdrop-blur">
     <div class="mx-auto flex max-w-5xl items-center justify-between gap-3 px-4 py-3">
-      <Logo />
-      <div class="flex rounded-lg bg-baax-blue-50 p-0.5">
-        <button
-          v-for="item in roles"
-          :key="item.id"
-          type="button"
-          class="rounded-md px-2.5 py-1.5 text-xs font-medium transition sm:px-3 sm:text-sm"
-          :class="
-            role === item.id
-              ? 'bg-white text-baax-purple-600 shadow-sm'
-              : 'text-baax-blue-600 hover:text-baax-blue-800'
-          "
-          @click="switchRole(item.id)"
-        >
-          {{ item.label }}
+      <Logo :home="homeLink" />
+      <div v-if="!isLoggedIn" class="flex gap-2">
+        <NuxtLink to="/login" class="btn-secondary text-sm">ورود</NuxtLink>
+        <NuxtLink to="/signup" class="btn-primary text-sm">ثبت‌نام</NuxtLink>
+      </div>
+      <div v-else class="flex items-center gap-3">
+        <span class="hidden text-sm text-baax-blue-600 sm:inline">{{ session?.name }}</span>
+        <button type="button" class="text-sm text-baax-blue-500 hover:text-red-600" @click="onLogout">
+          خروج
         </button>
       </div>
     </div>
@@ -41,43 +35,37 @@
 </template>
 
 <script setup lang="ts">
-import type { DemoRole } from "~/composables/useRole";
-
 const route = useRoute();
 const router = useRouter();
-const { isLoggedIn } = useDemo();
-const { role, roles, setRole } = useRole();
+const { session, isLoggedIn, logout, panelPath } = useAuth();
+
+const homeLink = computed(() => {
+  if (!isLoggedIn.value) return "/";
+  return panelPath();
+});
 
 const memberNav = [
-  { href: "/", label: "خانه" },
+  { href: "/member", label: "خانه" },
+  { href: "/member/browse", label: "صندوق‌ها" },
   { href: "/ledger", label: "دفترکل" },
-  { href: "/quick-buy", label: "خرید زودهنگام" },
 ];
 
-const organizerNav = [
-  { href: "/organizer", label: "صندوق‌ها" },
-];
-
-const adminNav = [
-  { href: "/admin", label: "داشبورد" },
-];
+const organizerNav = [{ href: "/organizer", label: "صندوق‌ها" }];
 
 const navItems = computed(() => {
   if (!isLoggedIn.value) return [];
-  if (role.value === "organizer") return organizerNav;
-  if (role.value === "admin") return adminNav;
+  if (session.value?.role === "organizer") return organizerNav;
   return memberNav;
 });
 
 function isActive(href: string): boolean {
-  if (href === "/") return route.path === "/";
+  if (href === "/member") return route.path === "/member";
   if (href === "/organizer") return route.path.startsWith("/organizer");
   return route.path === href || route.path.startsWith(`${href}/`);
 }
 
-function switchRole(next: DemoRole) {
-  setRole(next);
-  const target = roles.find((r) => r.id === next);
-  if (target) router.push(target.path);
+function onLogout() {
+  logout();
+  router.push("/");
 }
 </script>

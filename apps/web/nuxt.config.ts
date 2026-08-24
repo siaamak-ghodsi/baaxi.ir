@@ -32,6 +32,10 @@ export default defineNuxtConfig({
       crawlLinks: true,
       routes: [
         "/",
+        "/login",
+        "/signup",
+        "/member",
+        "/member/browse",
         "/ledger",
         "/quick-buy",
         "/organizer",
