@@ -1,0 +1,16 @@
+{
+  "name": "baax",
+  "private": true,
+  "description": "باکس — member-facing demo monorepo",
+  "workspaces": [
+    "apps/*"
+  ],
+  "scripts": {
+    "dev": "npm run dev --workspace=web",
+    "build": "npm run build --workspace=web",
+    "lint": "npm run lint --workspace=web"
+  },
+  "engines": {
+    "node": ">=18.17.0"
+  }
+}
