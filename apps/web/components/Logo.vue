@@ -1,5 +1,5 @@
 <template>
-  <NuxtLink to="/" class="inline-flex items-center gap-2" :class="className">
+  <NuxtLink :to="home" class="inline-flex items-center gap-2" :class="className">
     <svg
       width="36"
       height="36"
@@ -22,17 +22,12 @@
         stroke-linejoin="round"
         fill="none"
       />
-      <path
-        d="M14 20h8"
-        stroke="#2563eb"
-        stroke-width="2"
-        stroke-linecap="round"
-      />
+      <path d="M14 20h8" stroke="#2563eb" stroke-width="2" stroke-linecap="round" />
     </svg>
     <span class="text-xl font-bold text-baax-blue-900">باکس</span>
   </NuxtLink>
 </template>
 
 <script setup lang="ts">
-defineProps<{ className?: string }>();
+withDefaults(defineProps<{ className?: string; home?: string }>(), { home: "/" });
 </script>

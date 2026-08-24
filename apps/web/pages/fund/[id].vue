@@ -1,7 +1,7 @@
 <template>
-  <DemoGate>
+  <div>
     <nav class="mb-4 text-sm text-baax-blue-500">
-      <NuxtLink to="/" class="hover:text-baax-blue-700">خانه</NuxtLink>
+      <NuxtLink to="/member" class="hover:text-baax-blue-700">خانه</NuxtLink>
       <span class="mx-2">/</span>
       <span class="text-baax-blue-800">{{ fund.name }}</span>
     </nav>
@@ -63,11 +63,13 @@
       <NuxtLink :to="`/ledger?fund=${fund.id}`" class="btn-primary">دفترکل</NuxtLink>
       <NuxtLink v-if="fund.type === 'rosca'" to="/quick-buy" class="btn-secondary">خرید زودهنگام</NuxtLink>
     </div>
-  </DemoGate>
+  </div>
 </template>
 
 <script setup lang="ts">
 import { formatToman, fundTypeLabel, getFund } from "~/data/mock";
+
+definePageMeta({ auth: "member" });
 
 const route = useRoute();
 const fund = getFund(route.params.id as string);

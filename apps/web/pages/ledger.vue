@@ -1,5 +1,5 @@
 <template>
-  <DemoGate>
+  <div>
     <header class="mb-6">
       <h1 class="text-2xl font-bold text-baax-blue-900">دفترکل</h1>
     </header>
@@ -35,21 +35,31 @@
           </p>
         </div>
       </div>
-
       <section class="card">
         <LedgerTable :entries="selectedFund.ledger" />
       </section>
     </template>
-  </DemoGate>
+  </div>
 </template>
 
 <script setup lang="ts">
-import { formatToman, fundTypeLabel, getFund, getMemberFunds } from "~/data/mock";
+import {
+  formatToman,
+  fundTypeLabel,
+  getFund,
+  getMemberFundsForUser,
+} from "~/data/mock";
+
+definePageMeta({ auth: "member" });
 
 const route = useRoute();
-const myFunds = getMemberFunds();
-const fundId = computed(() => route.query.fund as string | undefined);
-const selectedFund = computed(() =>
-  fundId.value ? getFund(fundId.value) ?? myFunds[0] : myFunds[0]
+const { currentUser } = useAuth();
+const myFunds = computed(() =>
+  getMemberFundsForUser(currentUser()?.joinedFundIds ?? [])
 );
+const fundId = computed(() => route.query.fund as string | undefined);
+const selectedFund = computed(() => {
+  if (fundId.value) return getFund(fundId.value) ?? myFunds.value[0];
+  return myFunds.value[0];
+});
 </script>

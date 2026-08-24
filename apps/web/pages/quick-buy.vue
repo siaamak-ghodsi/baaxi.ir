@@ -1,7 +1,7 @@
 <template>
-  <DemoGate>
+  <div>
     <header class="mb-6">
-      <NuxtLink to="/" class="mb-2 inline-block text-sm text-baax-blue-500 hover:text-baax-blue-700">
+      <NuxtLink to="/member" class="mb-2 inline-block text-sm text-baax-blue-500 hover:text-baax-blue-700">
         ← خانه
       </NuxtLink>
       <h1 class="text-2xl font-bold text-baax-blue-900">خرید زودهنگام</h1>
@@ -58,11 +58,13 @@
       <FlowRow label="باقی‌مانده نقد" :value="formatToman(Math.max(remainingCash, 0))" highlight />
       <button type="button" class="btn-primary mt-6 w-full" disabled>تأیید</button>
     </section>
-  </DemoGate>
+  </div>
 </template>
 
 <script setup lang="ts">
 import { formatToman, shopPartners } from "~/data/mock";
+
+definePageMeta({ auth: "member" });
 
 const MOCK_WIN_AMOUNT = 53_900_000;
 const MOCK_PARTNER_DEBT = 12_000_000;
