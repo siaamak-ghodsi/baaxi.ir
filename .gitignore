@@ -1,7 +1,9 @@
 node_modules/
+.nuxt/
+.output/
+dist/
 .next/
 out/
-dist/
 build/
 .env
 .env.*
@@ -10,3 +12,4 @@ build/
 .DS_Store
 .turbo/
 .vercel/
+.wrangler/

@@ -1,7 +1,13 @@
 import type { Config } from "tailwindcss";
 
-const config: Config = {
-  content: ["./src/**/*.{js,ts,jsx,tsx,mdx}"],
+export default {
+  content: [
+    "./components/**/*.{vue,js,ts}",
+    "./layouts/**/*.vue",
+    "./pages/**/*.vue",
+    "./app.vue",
+    "./error.vue",
+  ],
   theme: {
     extend: {
       colors: {
@@ -23,11 +29,9 @@ const config: Config = {
         },
       },
       fontFamily: {
-        sans: ["var(--font-vazirmatn)", "system-ui", "sans-serif"],
+        sans: ["Vazirmatn", "system-ui", "sans-serif"],
       },
     },
   },
   plugins: [],
-};
-
-export default config;
+} satisfies Config;

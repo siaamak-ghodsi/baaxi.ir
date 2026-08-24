@@ -8,7 +8,7 @@
 
 ```
 .
-├── apps/web/          # Next.js (App Router) + TypeScript + Tailwind
+├── apps/web/          # Nuxt 3 + TypeScript + Tailwind
 ├── docs/PRODUCT.md    # قوانین قفل‌شدهٔ محصول
 └── package.json       # npm workspaces
 ```
@@ -17,6 +17,13 @@
 
 ```bash
 cd apps/web
+npm install
+npx nuxi dev
+```
+
+یا:
+
+```bash
 npm install
 npm run dev
 ```
@@ -30,11 +37,19 @@ cd apps/web
 npm run build
 ```
 
-یا از ریشهٔ repo:
+خروجی Nitro با preset `cloudflare-pages` در `.output/` ساخته می‌شود.
+
+## استقرار روی Cloudflare Pages
+
+1. **Build command:** `cd apps/web && npm install && npm run build`
+2. **Build output directory:** `apps/web/dist`
+3. **Node version:** 18+
+
+برای پیش‌نمایش محلی پس از build:
 
 ```bash
-npm install
-npm run build
+cd apps/web
+npx nuxi preview
 ```
 
 ## صفحات دمو
