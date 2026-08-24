@@ -1,6 +1,6 @@
 <template>
   <NuxtLink
-    :to="`/fund/${fund.id}`"
+    :to="linkFor(fund)"
     class="card block transition hover:border-baax-blue-200 hover:shadow-md"
   >
     <div class="mb-3 flex items-start justify-between gap-3">
@@ -20,12 +20,10 @@
       <div class="text-left">
         <p class="stat-label">دوره</p>
         <p class="text-sm font-semibold text-baax-purple-600">
-          {{ fund.currentCycle }} از {{ fund.totalCycles }}
+          {{ fund.currentCycle }}/{{ fund.totalCycles }}
         </p>
       </div>
     </div>
-
-    <p class="mb-4 line-clamp-2 text-sm text-baax-blue-600">{{ fund.description }}</p>
 
     <div class="grid grid-cols-2 gap-3 border-t border-baax-blue-50 pt-3 sm:grid-cols-3">
       <div>
@@ -42,7 +40,7 @@
           <p class="stat-value text-sm">{{ formatToman(fund.loanCap ?? 0) }}</p>
         </div>
         <div>
-          <p class="stat-label">قسط ماهانه</p>
+          <p class="stat-label">قسط</p>
           <p class="stat-value text-sm">{{ formatToman(fund.installmentAmount ?? 0) }}</p>
         </div>
       </template>
@@ -58,5 +56,14 @@
 import type { Fund } from "~/data/mock";
 import { formatToman, fundTypeLabel } from "~/data/mock";
 
-defineProps<{ fund: Fund }>();
+const props = withDefaults(
+  defineProps<{ fund: Fund; variant?: "member" | "organizer" }>(),
+  { variant: "member" }
+);
+
+function linkFor(fund: Fund) {
+  return props.variant === "organizer"
+    ? `/organizer/fund/${fund.id}`
+    : `/fund/${fund.id}`;
+}
 </script>

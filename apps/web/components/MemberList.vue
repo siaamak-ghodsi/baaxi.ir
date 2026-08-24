@@ -1,7 +1,5 @@
 <template>
-  <p v-if="members.length === 0" class="text-sm text-baax-blue-500">
-    لیست اعضا در این دمو خالی است.
-  </p>
+  <p v-if="members.length === 0" class="text-sm text-baax-blue-500">—</p>
   <ul v-else class="divide-y divide-baax-blue-50">
     <li
       v-for="member in members"
@@ -25,13 +23,13 @@
             </span>
           </p>
           <p v-if="member.daysOverdue && member.daysOverdue > 10" class="text-xs text-red-600">
-            {{ member.daysOverdue }} روز تأخیر — آماده جایگزینی از لیست انتظار
+            {{ member.daysOverdue }} روز تأخیر · آماده جایگزینی
           </p>
           <p
-            v-else-if="member.daysOverdue && member.daysOverdue <= 10"
+            v-else-if="member.daysOverdue"
             class="text-xs text-amber-600"
           >
-            {{ member.daysOverdue }} روز تأخیر — در دوره اخطار
+            {{ member.daysOverdue }} روز تأخیر
           </p>
         </div>
       </div>
