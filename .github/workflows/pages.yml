@@ -21,15 +21,13 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: "20"
-          cache: npm
-          cache-dependency-path: apps/web/package-lock.json
+          node-version: "22"
       - name: Install and generate
         working-directory: apps/web
         env:
           NUXT_APP_BASE_URL: /baaxi.ir/
         run: |
-          npm ci
+          npm install
           npx nuxi generate
       - name: Pick static output
         run: |
