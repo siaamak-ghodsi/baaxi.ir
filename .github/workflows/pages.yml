@@ -1,3 +1,5 @@
+# Optional GitHub Pages deploy — runs only when Pages is enabled on this repo (private OK).
+# No secrets required. Maintainer enables: Settings → Pages → Source: GitHub Actions.
 name: Deploy GitHub Pages
 
 on:

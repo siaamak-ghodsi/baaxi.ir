@@ -10,7 +10,7 @@ export default defineNuxtConfig({
   css: ["~/assets/css/main.css"],
 
   app: {
-    // Project Pages: https://<user>.github.io/baaxi.ir/
+    // Matches GitHub project Pages path if maintainer enables Pages on this private repo.
     baseURL: "/baaxi.ir/",
     head: {
       htmlAttrs: { dir: "rtl", lang: "fa" },

@@ -4,14 +4,6 @@
 
 نام UI فقط **باکس** است. قوانین محصول در [`docs/PRODUCT.md`](docs/PRODUCT.md).
 
-## مشاهدهٔ دمو روی GitHub Pages
-
-پس از فعال‌سازی Pages توسط maintainer (Settings → Pages → Source: **GitHub Actions**):
-
-**https://siaamak-ghodsi.github.io/baaxi.ir/**
-
-هر push به `main` workflow [`.github/workflows/pages.yml`](.github/workflows/pages.yml) را اجرا می‌کند و سایت استاتیک را deploy می‌کند.
-
 ## ساختار monorepo
 
 ```
@@ -21,7 +13,7 @@
 └── package.json       # npm workspaces
 ```
 
-## اجرای محلی
+## کار روی سایت (محلی)
 
 ```bash
 cd apps/web
@@ -29,16 +21,16 @@ npm install
 npx nuxi dev
 ```
 
-یا از ریشه:
+مرورگر: [http://localhost:3000/baaxi.ir/](http://localhost:3000/baaxi.ir/)
+
+از ریشهٔ repo:
 
 ```bash
 npm install
 npm run dev
 ```
 
-مرورگر: [http://localhost:3000/baaxi.ir/](http://localhost:3000/baaxi.ir/) (با `baseURL` پروژه)
-
-## generate (استatic برای GitHub Pages)
+## build استاتیک (محلی)
 
 ```bash
 cd apps/web
@@ -47,18 +39,14 @@ npm run generate
 
 خروجی: `apps/web/.output/public`
 
-یا از ریشه:
-
-```bash
-npm run generate
-```
-
-پیش‌نمایش محلی:
+پیش‌نمایش همان خروجی:
 
 ```bash
 cd apps/web
 npx serve .output/public
 ```
+
+> workflow [`.github/workflows/pages.yml`](.github/workflows/pages.yml) برای deploy اختیاری GitHub Pages (در صورت فعال‌سازی توسط maintainer روی همین repo **خصوصی**) نگه داشته شده — نیازی به عمومی کردن repo نیست.
 
 ## صفحات دمو
 
