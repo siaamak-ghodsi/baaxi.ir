@@ -4,13 +4,7 @@
     <section class="landing-hero">
       <div class="landing-hero-inner">
         <div class="landing-hero-copy">
-          <img
-            :src="logoSrc"
-            width="200"
-            height="250"
-            alt="باکس"
-            class="landing-logo mb-6"
-          />
+          <Logo size="hero" class-name="landing-logo mb-6" />
           <p class="landing-tagline">
             ابزار مدیریت صندوق — قرعه‌کشی و پس‌انداز/وام، با دفترکل جدا برای هر صندوق.
           </p>
@@ -93,10 +87,6 @@
 
 <script setup lang="ts">
 definePageMeta({ layout: "default" });
-
-const app = useRuntimeConfig().app;
-const base = app.baseURL.endsWith("/") ? app.baseURL : `${app.baseURL}/`;
-const logoSrc = `${base}logo.png`;
 
 const differentiators = [
   "زودتر از قرعه نقد یا خرید می‌گیری",

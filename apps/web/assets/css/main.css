@@ -62,6 +62,18 @@
     @apply mx-auto sm:mx-0;
   }
 
+  .baax-logo {
+    @apply w-auto object-contain;
+  }
+
+  .baax-logo-header {
+    @apply h-9 max-h-9;
+  }
+
+  .baax-logo-hero {
+    @apply max-h-56 w-auto;
+  }
+
   .landing-tagline {
     @apply mx-auto max-w-md text-base leading-relaxed text-baax-blue-700 sm:mx-0 sm:text-lg;
   }
