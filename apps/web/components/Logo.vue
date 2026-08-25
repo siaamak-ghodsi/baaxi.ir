@@ -1,14 +1,11 @@
 <template>
-  <NuxtLink :to="home" class="inline-flex items-center gap-2.5" :class="className">
+  <NuxtLink :to="home" class="inline-flex items-center" :class="className">
     <img
-      :src="iconSrc"
-      :width="iconSize"
-      :height="iconSize"
-      alt=""
-      class="shrink-0"
-      aria-hidden="true"
+      :src="logoSrc"
+      alt="باکس"
+      class="baax-logo shrink-0"
+      :class="size === 'hero' ? 'baax-logo-hero' : 'baax-logo-header'"
     />
-    <span class="text-xl font-bold text-baax-blue-900">باکس</span>
   </NuxtLink>
 </template>
 
@@ -17,15 +14,15 @@ withDefaults(
   defineProps<{
     className?: string;
     home?: string;
-    iconSize?: number;
+    size?: "header" | "hero";
   }>(),
   {
     home: "/",
-    iconSize: 36,
+    size: "header",
   }
 );
 
 const app = useRuntimeConfig().app;
 const base = app.baseURL.endsWith("/") ? app.baseURL : `${app.baseURL}/`;
-const iconSrc = `${base}logo-icon.png`;
+const logoSrc = `${base}logo.png`;
 </script>
