@@ -79,7 +79,7 @@ export const memberProfile = {
   status: "pending" as PaymentStatus,
 };
 
-export const funds: Fund[] = [
+export const seedFunds: Fund[] = [
   {
     id: "rosca-12",
     name: "صندوق ۱۲ نفره — محله ولیعصر",
@@ -186,7 +186,7 @@ export const shopPartners: ShopPartner[] = [
 ];
 
 export const platformStats = {
-  totalFunds: funds.length,
+  totalFunds: seedFunds.length,
   totalMembers: 39,
   totalOrganizers: 2,
   serviceFeesMonth: 5_835_000,
@@ -202,26 +202,22 @@ export const platformFlags: PlatformFlag[] = [
   { id: "f2", fundId: "savings-loan-8", fundName: "پس‌انداز/وام", member: "الهام ر.", type: "dispute", status: "review" },
 ];
 
-export function getFund(id: string): Fund | undefined {
-  return funds.find((f) => f.id === id);
+export function getFundFromList(list: Fund[], id: string): Fund | undefined {
+  return list.find((f) => f.id === id);
 }
 
-export function getMemberFunds(): Fund[] {
-  return funds.filter((f) => memberFundIds.includes(f.id));
+export function getMemberFundsForUser(list: Fund[], joinedFundIds: string[]): Fund[] {
+  return list.filter((f) => joinedFundIds.includes(f.id));
 }
 
-export function getMemberFundsForUser(joinedFundIds: string[]): Fund[] {
-  return funds.filter((f) => joinedFundIds.includes(f.id));
-}
-
-export function getBrowsableFunds(joinedFundIds: string[]): Fund[] {
-  return funds.filter(
+export function getBrowsableFunds(list: Fund[], joinedFundIds: string[]): Fund[] {
+  return list.filter(
     (f) => !joinedFundIds.includes(f.id) && f.filledSeats < f.memberCount
   );
 }
 
-export function getOrganizerFunds(name = "سیاامک غ."): Fund[] {
-  return funds.filter((f) => f.organizerName === name);
+export function getOrganizerFunds(list: Fund[], name: string): Fund[] {
+  return list.filter((f) => f.organizerName === name);
 }
 
 export function formatToman(amount: number): string {

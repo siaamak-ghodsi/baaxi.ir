@@ -39,6 +39,7 @@ export default defineNuxtConfig({
         "/ledger",
         "/quick-buy",
         "/organizer",
+        "/organizer/create",
         "/admin",
         "/fund/rosca-12",
         "/fund/savings-loan-8",

@@ -33,7 +33,7 @@
                 ? 'border-baax-purple-500 bg-baax-purple-500/5 text-baax-purple-600'
                 : 'border-baax-blue-200 text-baax-blue-700'
             "
-            @click="role = 'member'"
+            @click.prevent="role = 'member'"
           >
             کاربر
           </button>
@@ -45,7 +45,7 @@
                 ? 'border-baax-purple-500 bg-baax-purple-500/5 text-baax-purple-600'
                 : 'border-baax-blue-200 text-baax-blue-700'
             "
-            @click="role = 'organizer'"
+            @click.prevent="role = 'organizer'"
           >
             صندوق‌دار
           </button>

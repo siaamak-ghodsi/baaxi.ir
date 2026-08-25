@@ -53,7 +53,7 @@
             </tr>
           </thead>
           <tbody class="divide-y divide-baax-blue-50">
-            <tr v-for="fund in funds" :key="fund.id">
+            <tr v-for="fund in allFunds" :key="fund.id">
               <td class="py-3 font-medium text-baax-blue-900">{{ fund.name.split('—')[0].trim() }}</td>
               <td class="py-3 text-baax-blue-700">{{ fundTypeLabel(fund.type) }}</td>
               <td class="py-3 text-baax-blue-700">{{ fund.organizerName }}</td>
@@ -105,13 +105,14 @@ import {
   formatToman,
   fundServiceFee,
   fundTypeLabel,
-  funds,
   organizers,
   platformFlags,
   platformStats,
 } from "~/data/mock";
 
 definePageMeta({ layout: "default" });
+
+const { funds: allFunds } = useFunds();
 
 const ADMIN_CODE = "baax-admin";
 const unlocked = ref(false);

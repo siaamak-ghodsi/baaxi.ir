@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if="fund">
     <nav class="mb-4 text-sm text-baax-blue-500">
       <NuxtLink to="/organizer" class="hover:text-baax-blue-700">صندوق‌ها</NuxtLink>
       <span class="mx-2">/</span>
@@ -76,12 +76,24 @@
 
     <section class="card mb-6">
       <div class="mb-4 flex flex-wrap items-center justify-between gap-3">
-        <h2 class="section-title">اعضا · دوره {{ fund.currentCycle }}</h2>
+        <h2 class="section-title">
+          اعضا · {{ fund.members.length }}/{{ fund.memberCount }} · دوره {{ fund.currentCycle }}
+        </h2>
         <div class="flex gap-2">
-          <button type="button" class="btn-secondary text-xs" :disabled="fund.cycleStatus === 'closed'">
+          <button
+            v-if="fund.cycleStatus === 'open'"
+            type="button"
+            class="btn-secondary text-xs"
+            @click="closeCycle(fund.id)"
+          >
             بستن دوره
           </button>
-          <button type="button" class="btn-primary text-xs" :disabled="fund.cycleStatus === 'open'">
+          <button
+            v-if="fund.cycleStatus === 'closed'"
+            type="button"
+            class="btn-primary text-xs"
+            @click="startCycle(fund.id)"
+          >
             شروع دوره
           </button>
         </div>
@@ -101,7 +113,13 @@
             <p class="font-medium text-baax-blue-900">{{ member.name }} · {{ member.seat }}</p>
             <p class="text-xs text-red-600">{{ member.daysOverdue }} روز · پیش از برد</p>
           </div>
-          <button type="button" class="btn-secondary text-xs">جایگزین</button>
+          <button
+            type="button"
+            class="btn-secondary text-xs"
+            @click="replaceMember(fund.id, member.id)"
+          >
+            جایگزین
+          </button>
         </li>
       </ul>
     </section>
@@ -116,17 +134,24 @@ import {
   formatToman,
   fundServiceFee,
   fundTypeLabel,
-  getFund,
   replaceableMembers,
 } from "~/data/mock";
 
 definePageMeta({ auth: "organizer" });
 
 const route = useRoute();
-const fund = getFund(route.params.id as string);
-if (!fund) throw createError({ statusCode: 404, statusMessage: "صفحه پیدا نشد" });
+const { getFund, startCycle, closeCycle, replaceMember, funds } = useFunds();
 
-const paidCount = countPaidThisCycle(fund);
-const lateCount = countLateThisCycle(fund);
-const replaceable = replaceableMembers(fund);
+const fundId = computed(() => route.params.id as string);
+const fund = computed(() => getFund(fundId.value));
+
+watchEffect(() => {
+  if (import.meta.client && funds.value.length && !fund.value) {
+    throw createError({ statusCode: 404, statusMessage: "صفحه پیدا نشد" });
+  }
+});
+
+const paidCount = computed(() => (fund.value ? countPaidThisCycle(fund.value) : 0));
+const lateCount = computed(() => (fund.value ? countLateThisCycle(fund.value) : 0));
+const replaceable = computed(() => (fund.value ? replaceableMembers(fund.value) : []));
 </script>
