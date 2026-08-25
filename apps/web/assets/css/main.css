@@ -58,8 +58,12 @@
     @apply text-center sm:text-right;
   }
 
-  .landing-logo {
-    @apply mx-auto sm:mx-0;
+  .landing-logo-wrap {
+    @apply mx-auto mb-6 inline-block overflow-hidden sm:mx-0;
+  }
+
+  .landing-logo-wrap .baax-logo-hero {
+    clip-path: inset(2.5% 2.5% 2.5% 2.5%);
   }
 
   .baax-logo {
@@ -74,8 +78,12 @@
     @apply max-h-56 w-auto;
   }
 
-  .landing-tagline {
-    @apply mx-auto max-w-md text-base leading-relaxed text-baax-blue-700 sm:mx-0 sm:text-lg;
+  .landing-headline {
+    @apply text-2xl font-bold text-baax-blue-600 sm:text-3xl lg:text-4xl;
+  }
+
+  .landing-subline {
+    @apply mx-auto mt-3 max-w-md text-sm leading-relaxed text-baax-blue-600/75 sm:mx-0 sm:text-base;
   }
 
   .landing-cta {
@@ -84,10 +92,6 @@
 
   .landing-cta-primary {
     @apply px-7 py-3 text-base shadow-sm shadow-baax-purple-600/20;
-  }
-
-  .landing-domain {
-    @apply mt-6 text-sm tracking-wide text-baax-blue-500;
   }
 
   .landing-preview {
@@ -120,25 +124,5 @@
 
   .landing-preview-fund {
     @apply rounded-xl border border-baax-blue-100 bg-white p-4;
-  }
-
-  .landing-diff {
-    @apply bg-baax-blue-50/60 py-10 sm:py-12;
-  }
-
-  .landing-diff-inner {
-    @apply mx-auto max-w-5xl px-4;
-  }
-
-  .landing-diff-list {
-    @apply grid gap-4 sm:grid-cols-3;
-  }
-
-  .landing-diff-list li {
-    @apply flex items-start gap-3 rounded-xl border border-baax-blue-100 bg-white px-4 py-4 text-sm leading-relaxed text-baax-blue-800;
-  }
-
-  .landing-diff-bullet {
-    @apply mt-1.5 h-2 w-2 shrink-0 rounded-full bg-baax-purple-600;
   }
 }
