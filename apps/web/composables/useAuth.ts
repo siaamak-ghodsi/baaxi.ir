@@ -11,6 +11,7 @@ import {
 export function useAuth() {
   const session = useState<Session | null>("auth-session", () => null);
   const hydrated = useState("auth-hydrated", () => false);
+  const userTick = useState("auth-user-tick", () => 0);
 
   const isLoggedIn = computed(() => !!session.value);
 
@@ -52,7 +53,12 @@ export function useAuth() {
     return "/member";
   }
 
+  function refreshUser() {
+    userTick.value += 1;
+  }
+
   function currentUser(): UserRecord | undefined {
+    userTick.value;
     if (!session.value) return undefined;
     return loadUsers().find((u) => u.phone === session.value!.phone);
   }
@@ -67,5 +73,6 @@ export function useAuth() {
     logout,
     panelPath,
     currentUser,
+    refreshUser,
   };
 }

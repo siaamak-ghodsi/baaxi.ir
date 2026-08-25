@@ -10,29 +10,36 @@
       </NuxtLink>
     </header>
 
-    <section class="mb-6 grid gap-4 sm:grid-cols-3">
+    <section v-if="myFunds.length" class="mb-6 grid gap-4 sm:grid-cols-3">
       <div class="card">
         <p class="stat-label">قسط بعدی</p>
-        <p class="mt-1 text-lg font-bold text-baax-blue-900">
-          {{ formatToman(memberProfile.nextPaymentAmount) }}
+        <p v-if="nextPayment" class="mt-1 text-lg font-bold text-baax-blue-900">
+          {{ formatToman(nextPayment.amount) }}
         </p>
-        <p class="mt-1 text-xs text-baax-blue-500">{{ memberProfile.nextPaymentDate }}</p>
+        <p v-else class="mt-1 text-lg font-bold text-baax-blue-400">—</p>
+        <p v-if="nextPayment" class="mt-1 text-xs text-baax-blue-500">{{ nextPayment.date }}</p>
       </div>
       <div class="card">
         <p class="stat-label">وضعیت</p>
-        <p class="mt-2">
+        <p v-if="nextPayment" class="mt-2">
           <span
             class="rounded-full border px-2.5 py-0.5 text-xs font-medium"
-            :class="paymentStatusClasses(memberProfile.status)"
+            :class="paymentStatusClasses(nextPayment.status)"
           >
-            {{ paymentStatusLabel(memberProfile.status) }}
+            {{ paymentStatusLabel(nextPayment.status) }}
           </span>
         </p>
+        <p v-else class="mt-2 text-sm text-baax-blue-400">—</p>
       </div>
       <div class="card">
         <p class="stat-label">صندوق‌های من</p>
         <p class="mt-1 text-lg font-bold text-baax-purple-600">{{ myFunds.length }}</p>
       </div>
+    </section>
+
+    <section v-else class="mb-6 card text-center">
+      <p class="text-sm text-baax-blue-500">عضو هیچ صندوقی نیستید.</p>
+      <NuxtLink to="/member/browse" class="btn-primary mt-4 inline-block text-sm">پیوستن به صندوق</NuxtLink>
     </section>
 
     <section class="mb-8">
@@ -46,7 +53,7 @@
         <FundCard v-for="fund in myFunds" :key="fund.id" :fund="fund" />
       </div>
       <p v-else class="text-sm text-baax-blue-500">
-        عضو هیچ صندوقی نیستید.
+        هنوز عضو صندوقی نشده‌اید.
         <NuxtLink to="/member/browse" class="text-baax-purple-600 hover:underline">پیوستن</NuxtLink>
       </p>
     </section>
@@ -54,18 +61,19 @@
 </template>
 
 <script setup lang="ts">
-import {
-  formatToman,
-  getMemberFundsForUser,
-  memberProfile,
-} from "~/data/mock";
+import { formatToman } from "~/data/mock";
 import { paymentStatusClasses, paymentStatusLabel } from "~/utils";
 
 definePageMeta({ auth: "member" });
 
 const { session, currentUser } = useAuth();
+const { memberFunds, nextPaymentForUser } = useFunds();
+
 const user = computed(() => currentUser());
-const myFunds = computed(() =>
-  getMemberFundsForUser(user.value?.joinedFundIds ?? [])
+const myFunds = computed(() => memberFunds(user.value?.joinedFundIds ?? []));
+const nextPayment = computed(() =>
+  session.value
+    ? nextPaymentForUser(session.value.name, user.value?.joinedFundIds ?? [])
+    : null
 );
 </script>

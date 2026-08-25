@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if="fund">
     <nav class="mb-4 text-sm text-baax-blue-500">
       <NuxtLink to="/member" class="hover:text-baax-blue-700">خانه</NuxtLink>
       <span class="mx-2">/</span>
@@ -60,18 +60,69 @@
     </section>
 
     <div class="mt-6 flex flex-wrap gap-3">
-      <NuxtLink :to="`/ledger?fund=${fund.id}`" class="btn-primary">دفترکل</NuxtLink>
-      <NuxtLink v-if="fund.type === 'rosca'" to="/quick-buy" class="btn-secondary">خرید زودهنگام</NuxtLink>
+      <button
+        v-if="canJoin"
+        type="button"
+        class="btn-primary"
+        :disabled="joining"
+        @click="onJoin"
+      >
+        {{ joining ? "در حال پیوستن…" : "پیوستن" }}
+      </button>
+      <NuxtLink v-if="isMember" :to="`/ledger?fund=${fund.id}`" class="btn-primary">دفترکل</NuxtLink>
+      <NuxtLink v-if="isMember && fund.type === 'rosca'" to="/quick-buy" class="btn-secondary">
+        خرید زودهنگام
+      </NuxtLink>
     </div>
+    <p v-if="joinError" class="mt-2 text-sm text-red-600">{{ joinError }}</p>
   </div>
 </template>
 
 <script setup lang="ts">
-import { formatToman, fundTypeLabel, getFund } from "~/data/mock";
+import { formatToman, fundTypeLabel } from "~/data/mock";
 
 definePageMeta({ auth: "member" });
 
 const route = useRoute();
-const fund = getFund(route.params.id as string);
-if (!fund) throw createError({ statusCode: 404, statusMessage: "صفحه پیدا نشد" });
+const router = useRouter();
+const { session, currentUser } = useAuth();
+const { getFund, joinFund, funds } = useFunds();
+
+const fundId = computed(() => route.params.id as string);
+const fund = computed(() => getFund(fundId.value));
+const user = computed(() => currentUser());
+
+watchEffect(() => {
+  if (import.meta.client && funds.value.length && !fund.value) {
+    throw createError({ statusCode: 404, statusMessage: "صفحه پیدا نشد" });
+  }
+});
+
+const isMember = computed(() =>
+  user.value?.joinedFundIds.includes(fundId.value) ?? false
+);
+
+const canJoin = computed(() => {
+  if (!fund.value || isMember.value) return false;
+  return fund.value.filledSeats < fund.value.memberCount;
+});
+
+const joining = ref(false);
+const joinError = ref("");
+
+async function onJoin() {
+  if (!session.value || !fund.value) return;
+  joining.value = true;
+  joinError.value = "";
+
+  const result = joinFund(fundId.value, session.value.name, session.value.phone);
+  joining.value = false;
+
+  if (!result.ok) {
+    joinError.value = result.error;
+    return;
+  }
+
+  await router.push("/member");
+}
 </script>

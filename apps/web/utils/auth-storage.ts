@@ -80,7 +80,18 @@ export function findUserByPhone(phone: string): UserRecord | undefined {
   return loadUsers().find((u) => u.phone === normalized);
 }
 
-export function registerUser(user: UserRecord): { ok: true } | { ok: false; error: string } {
+export function updateUser(phone: string, patch: Partial<UserRecord>): UserRecord | undefined {
+  const users = loadUsers();
+  const idx = users.findIndex((u) => u.phone === phone);
+  if (idx < 0) return undefined;
+  users[idx] = { ...users[idx], ...patch };
+  saveUsers(users);
+  return users[idx];
+}
+
+export function registerUser(user: Omit<UserRecord, "phone"> & { phone: string }):
+  | { ok: true }
+  | { ok: false; error: string } {
   const phone = normalizePhone(user.phone);
   if (!isValidPhone(phone)) return { ok: false, error: "شماره موبایل معتبر نیست" };
   if (!user.name.trim()) return { ok: false, error: "نام را وارد کنید" };

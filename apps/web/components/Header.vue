@@ -50,7 +50,10 @@ const memberNav = [
   { href: "/ledger", label: "دفترکل" },
 ];
 
-const organizerNav = [{ href: "/organizer", label: "صندوق‌ها" }];
+const organizerNav = [
+  { href: "/organizer", label: "صندوق‌ها" },
+  { href: "/organizer/create", label: "ایجاد صندوق" },
+];
 
 const navItems = computed(() => {
   if (!isLoggedIn.value) return [];
@@ -60,7 +63,10 @@ const navItems = computed(() => {
 
 function isActive(href: string): boolean {
   if (href === "/member") return route.path === "/member";
-  if (href === "/organizer") return route.path.startsWith("/organizer");
+  if (href === "/organizer") {
+    return route.path === "/organizer" || route.path.startsWith("/organizer/fund/");
+  }
+  if (href === "/organizer/create") return route.path === "/organizer/create";
   return route.path === href || route.path.startsWith(`${href}/`);
 }
 
