@@ -36,4 +36,97 @@
   .stat-value {
     @apply text-base font-semibold text-baax-blue-900;
   }
+
+  .landing {
+    @apply -mx-4 sm:-mx-0;
+  }
+
+  .landing-hero {
+    @apply relative overflow-hidden border-b border-baax-blue-100 bg-white;
+  }
+
+  .landing-hero::before {
+    content: "";
+    @apply pointer-events-none absolute inset-0 bg-gradient-to-bl from-baax-blue-50 via-white to-white;
+  }
+
+  .landing-hero-inner {
+    @apply relative mx-auto grid max-w-5xl gap-10 px-4 py-12 sm:grid-cols-2 sm:items-center sm:py-16 lg:gap-16 lg:py-20;
+  }
+
+  .landing-hero-copy {
+    @apply text-center sm:text-right;
+  }
+
+  .landing-logo {
+    @apply mx-auto sm:mx-0;
+  }
+
+  .landing-tagline {
+    @apply mx-auto max-w-md text-base leading-relaxed text-baax-blue-700 sm:mx-0 sm:text-lg;
+  }
+
+  .landing-cta {
+    @apply mt-8 flex flex-wrap items-center justify-center gap-3 sm:justify-start;
+  }
+
+  .landing-cta-primary {
+    @apply px-7 py-3 text-base shadow-sm shadow-baax-purple-600/20;
+  }
+
+  .landing-domain {
+    @apply mt-6 text-sm tracking-wide text-baax-blue-500;
+  }
+
+  .landing-preview {
+    @apply rounded-2xl border border-baax-blue-100 bg-white shadow-lg shadow-baax-blue-900/5;
+  }
+
+  .landing-preview-header {
+    @apply flex items-center gap-1.5 border-b border-baax-blue-50 px-4 py-3;
+  }
+
+  .landing-preview-dot {
+    @apply h-2 w-2 rounded-full bg-baax-blue-200;
+  }
+
+  .landing-preview-title {
+    @apply mr-auto text-xs text-baax-blue-500;
+  }
+
+  .landing-preview-body {
+    @apply space-y-4 p-4;
+  }
+
+  .landing-preview-stats {
+    @apply grid grid-cols-3 gap-2;
+  }
+
+  .landing-preview-stat {
+    @apply rounded-xl border border-baax-blue-50 bg-baax-blue-50/50 p-3;
+  }
+
+  .landing-preview-fund {
+    @apply rounded-xl border border-baax-blue-100 bg-white p-4;
+  }
+
+  .landing-diff {
+    @apply bg-baax-blue-50/60 py-10 sm:py-12;
+  }
+
+  .landing-diff-inner {
+    @apply mx-auto max-w-5xl px-4;
+  }
+
+  .landing-diff-list {
+    @apply grid gap-4 sm:grid-cols-3;
+  }
+
+  .landing-diff-list li {
+    @apply flex items-start gap-3 rounded-xl border border-baax-blue-100 bg-white px-4 py-4 text-sm leading-relaxed text-baax-blue-800;
+  }
+
+  .landing-diff-bullet {
+    @apply mt-1.5 h-2 w-2 shrink-0 rounded-full bg-baax-purple-600;
+  }
 }
