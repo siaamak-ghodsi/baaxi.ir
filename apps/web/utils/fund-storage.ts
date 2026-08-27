@@ -5,7 +5,7 @@ import { generateCharter } from "~/utils/charter";
 export const FUNDS_KEY = "baax-funds";
 
 function ensureCharter(fund: Fund): Fund {
-  if (fund.charter?.text) return fund;
+  if (fund.charter?.text?.trim()) return fund;
   const charter = generateCharter({
     type: fund.type,
     name: fund.name,

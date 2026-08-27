@@ -13,8 +13,8 @@ import {
   getMemberFundsForUser,
   getOrganizerFunds,
   getBrowsableFunds,
-  hasTrusteeRejected,
   isUserTrustee,
+  shouldRejectPayout,
   voteThreshold,
 } from "~/data/mock";
 import { findUserByPhone, loadUsers, updateUser } from "~/utils/auth-storage";
@@ -42,48 +42,49 @@ function bindTrusteeOnJoin(fund: Fund, userName: string, userPhone: string): Fun
 function tryReleasePayout(fund: Fund, request: PayoutRequest): { fund: Fund; request: PayoutRequest } {
   if (request.status !== "pending") return { fund, request };
 
-  const rejected = hasTrusteeRejected(request);
-  if (rejected) {
-    return { fund, request: { ...request, status: "rejected" } };
-  }
-
   const trusteeRelease = bothTrusteesApproved(request);
   const yesVotes = countYesVotes(request);
   const threshold = voteThreshold(fund.members.length);
   const voteRelease = yesVotes >= threshold;
 
-  if (!trusteeRelease && !voteRelease) return { fund, request };
+  if (trusteeRelease || voteRelease) {
+    const lastBalance = fund.ledger.at(-1)?.balance ?? fund.poolBalance ?? 0;
+    const newBalance = Math.max(0, lastBalance - request.amount);
+    const label =
+      request.type === "court_verdict"
+        ? `پرداخت دیه — حکم دادگاه`
+        : `پرداخت دیه — گرفتن رضایت`;
 
-  const lastBalance = fund.ledger.at(-1)?.balance ?? fund.poolBalance ?? 0;
-  const newBalance = Math.max(0, lastBalance - request.amount);
-  const label =
-    request.type === "court_verdict"
-      ? `پرداخت دیه — حکم دادگاه`
-      : `پرداخت دیه — گرفتن رضایت`;
+    const ledgerEntry = {
+      id: `l-${Date.now()}`,
+      date: todayFa(),
+      label,
+      amount: request.amount,
+      type: "debit" as const,
+      balance: newBalance,
+    };
 
-  const ledgerEntry = {
-    id: `l-${Date.now()}`,
-    date: todayFa(),
-    label,
-    amount: request.amount,
-    type: "debit" as const,
-    balance: newBalance,
-  };
+    const released: PayoutRequest = {
+      ...request,
+      status: "released",
+      releasedAt: new Date().toISOString(),
+    };
 
-  const released: PayoutRequest = {
-    ...request,
-    status: "released",
-    releasedAt: new Date().toISOString(),
-  };
+    return {
+      fund: {
+        ...fund,
+        poolBalance: newBalance,
+        ledger: [...fund.ledger, ledgerEntry],
+      },
+      request: released,
+    };
+  }
 
-  return {
-    fund: {
-      ...fund,
-      poolBalance: newBalance,
-      ledger: [...fund.ledger, ledgerEntry],
-    },
-    request: released,
-  };
+  if (shouldRejectPayout(fund, request)) {
+    return { fund, request: { ...request, status: "rejected" } };
+  }
+
+  return { fund, request };
 }
 
 export function useFunds() {

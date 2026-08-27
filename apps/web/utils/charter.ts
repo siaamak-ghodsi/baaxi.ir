@@ -1,9 +1,12 @@
-import type { FundCharter, FundType } from "~/data/mock";
+export interface FundCharter {
+  text: string;
+  createdAt: string;
+}
 
-export type { FundCharter };
+export type CharterFundType = "rosca" | "savings_loan" | "diyah";
 
 export interface CharterParams {
-  type: FundType;
+  type: CharterFundType;
   name: string;
   memberCount: number;
   monthlyAmount: number;

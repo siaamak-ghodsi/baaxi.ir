@@ -5,10 +5,10 @@ export type PayoutRequestType = "court_verdict" | "settlement";
 export type PayoutRequestStatus = "pending" | "released" | "rejected";
 export type TrusteeRole = "ameen" | "aman";
 
-export interface FundCharter {
-  text: string;
-  createdAt: string;
-}
+import { generateCharter } from "~/utils/charter";
+import type { FundCharter } from "~/utils/charter";
+
+export type { FundCharter } from "~/utils/charter";
 
 export interface TrusteeSeat {
   role: TrusteeRole;
@@ -245,10 +245,16 @@ export const seedFunds: Fund[] = [
       { role: "ameen", name: "رضا ن.", phone: "09131111111" },
       { role: "aman", name: "مریم ح." },
     ],
-    charter: {
-      text: "",
-      createdAt: "2026-01-01T00:00:00.000Z",
-    },
+    charter: generateCharter({
+      type: "diyah",
+      name: "صندوق دیه — خانواده احمدی",
+      memberCount: 6,
+      monthlyAmount: 2_000_000,
+      totalCycles: 12,
+      isFamily: true,
+      ameenName: "رضا ن.",
+      amanName: "مریم ح.",
+    }),
     payoutRequests: [],
     members: [
       { id: "d1", name: "رضا ن.", seat: 1, status: "paid", rulesAcceptedAt: "2026-01-02T00:00:00.000Z" },
@@ -356,6 +362,47 @@ export function bothTrusteesApproved(request: PayoutRequest): boolean {
 
 export function hasTrusteeRejected(request: PayoutRequest): boolean {
   return request.trusteeApprovals.some((a) => !a.approved);
+}
+
+export function trusteeDecision(
+  request: PayoutRequest,
+  role: TrusteeRole
+): boolean | undefined {
+  const decision = request.trusteeApprovals.find((a) => a.role === role);
+  return decision ? decision.approved : undefined;
+}
+
+export function bothTrusteesDecided(request: PayoutRequest): boolean {
+  return (
+    trusteeDecision(request, "ameen") !== undefined &&
+    trusteeDecision(request, "aman") !== undefined
+  );
+}
+
+export function isTrusteePathExhausted(request: PayoutRequest): boolean {
+  if (hasTrusteeRejected(request)) return true;
+  return bothTrusteesDecided(request) && !bothTrusteesApproved(request);
+}
+
+export function remainingVoters(fund: Fund, request: PayoutRequest): number {
+  const voted = new Set(request.memberVotes.map((v) => v.memberId));
+  return fund.members.filter((m) => !voted.has(m.id)).length;
+}
+
+export function maxPossibleYesVotes(fund: Fund, request: PayoutRequest): number {
+  return countYesVotes(request) + remainingVoters(fund, request);
+}
+
+export function isVotePathExhausted(fund: Fund, request: PayoutRequest): boolean {
+  const threshold = voteThreshold(fund.members.length);
+  const yes = countYesVotes(request);
+  if (yes >= threshold) return false;
+  if (maxPossibleYesVotes(fund, request) < threshold) return true;
+  return remainingVoters(fund, request) === 0;
+}
+
+export function shouldRejectPayout(fund: Fund, request: PayoutRequest): boolean {
+  return isTrusteePathExhausted(request) && isVotePathExhausted(fund, request);
 }
 
 export function cycleStatusLabel(status: CycleStatus): string {
