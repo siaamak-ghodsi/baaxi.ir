@@ -1,5 +1,12 @@
 <template>
-  <header class="sticky top-0 z-50 border-b border-baax-blue-100 bg-white/95 backdrop-blur">
+  <header
+    class="sticky top-0 z-50 backdrop-blur-sm"
+    :class="
+      isLanding
+        ? 'bg-baax-blue-50/80'
+        : 'border-b border-baax-blue-100 bg-white/95 backdrop-blur'
+    "
+  >
     <div class="mx-auto flex max-w-5xl items-center justify-between gap-3 px-4 py-3">
       <Logo :home="homeLink" />
       <div v-if="!isLoggedIn" class="flex gap-2">
@@ -38,6 +45,8 @@
 const route = useRoute();
 const router = useRouter();
 const { session, isLoggedIn, logout, panelPath } = useAuth();
+
+const isLanding = computed(() => route.path === "/");
 
 const homeLink = computed(() => {
   if (!isLoggedIn.value) return "/";
