@@ -4,15 +4,17 @@
     <section class="landing-hero">
       <div class="landing-hero-inner">
         <div class="landing-hero-copy">
-          <Logo size="hero" class-name="landing-logo mb-6" />
-          <p class="landing-tagline">
-            ابزار مدیریت صندوق — قرعه‌کشی و پس‌انداز/وام، با دفترکل جدا برای هر صندوق.
+          <div class="landing-logo-wrap">
+            <Logo size="hero" />
+          </div>
+          <h1 class="landing-headline">هیچوقت پول کم نیار</h1>
+          <p class="landing-subline">
+            ابزار مدیریت و تشکیل صندوق‌های خانوادگی، فروشگاهی و سازمانی از طریق اعتبارسنجی
           </p>
           <div class="landing-cta">
             <NuxtLink to="/signup" class="btn-primary landing-cta-primary">ثبت‌نام</NuxtLink>
             <NuxtLink to="/login" class="btn-secondary">ورود</NuxtLink>
           </div>
-          <p class="landing-domain">baaxi.ir</p>
         </div>
 
         <!-- Dashboard preview panel -->
@@ -70,27 +72,9 @@
         </div>
       </div>
     </section>
-
-    <!-- Differentiators -->
-    <section class="landing-diff">
-      <div class="landing-diff-inner">
-        <ul class="landing-diff-list">
-          <li v-for="item in differentiators" :key="item">
-            <span class="landing-diff-bullet" aria-hidden="true" />
-            <span>{{ item }}</span>
-          </li>
-        </ul>
-      </div>
-    </section>
   </div>
 </template>
 
 <script setup lang="ts">
 definePageMeta({ layout: "default" });
-
-const differentiators = [
-  "زودتر از قرعه نقد یا خرید می‌گیری",
-  "صندلی تأخیر از لیست انتظار پر می‌شود، نه ضبط",
-  "صندوق‌دار احراز را از باکس می‌خرد",
-];
 </script>
