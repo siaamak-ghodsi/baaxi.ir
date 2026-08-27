@@ -8,7 +8,7 @@
   }
 
   body {
-    @apply bg-baax-blue-50 text-baax-blue-900 antialiased font-sans;
+    @apply bg-baax-purple-50 text-baax-blue-900 antialiased font-sans;
   }
 }
 
@@ -47,11 +47,11 @@
 
   .landing-hero::before {
     content: "";
-    @apply pointer-events-none absolute inset-0 bg-gradient-to-bl from-baax-blue-100/25 via-baax-blue-50 to-baax-blue-50;
+    @apply pointer-events-none absolute inset-0 bg-gradient-to-bl from-baax-purple-100/30 via-baax-purple-50 to-baax-purple-50;
   }
 
   .landing-hero-inner {
-    @apply relative mx-auto grid max-w-5xl gap-10 px-4 pb-12 pt-8 sm:grid-cols-2 sm:items-center sm:pb-16 sm:pt-10 lg:gap-16 lg:pb-20 lg:pt-12;
+    @apply relative mx-auto max-w-5xl px-4 pb-12 pt-8 sm:pb-16 sm:pt-10 lg:pb-20 lg:pt-12;
   }
 
   .landing-hero-copy {
@@ -60,10 +60,6 @@
 
   .landing-logo-wrap {
     @apply mx-auto mb-6 inline-block overflow-hidden sm:mx-0;
-  }
-
-  .landing-logo-wrap .baax-logo-hero {
-    clip-path: inset(2.5% 2.5% 2.5% 2.5%);
   }
 
   .baax-logo {
@@ -84,37 +80,5 @@
 
   .landing-subline {
     @apply mx-auto mt-3 max-w-md text-sm leading-relaxed text-baax-blue-600/75 sm:mx-0 sm:text-base;
-  }
-
-  .landing-preview {
-    @apply rounded-2xl bg-white/35 backdrop-blur-[2px];
-  }
-
-  .landing-preview-header {
-    @apply flex items-center gap-1.5 px-4 py-3;
-  }
-
-  .landing-preview-dot {
-    @apply h-2 w-2 rounded-full bg-baax-blue-200/70;
-  }
-
-  .landing-preview-title {
-    @apply mr-auto text-xs text-baax-blue-500;
-  }
-
-  .landing-preview-body {
-    @apply space-y-4 px-4 pb-4;
-  }
-
-  .landing-preview-stats {
-    @apply grid grid-cols-3 gap-2;
-  }
-
-  .landing-preview-stat {
-    @apply rounded-xl bg-white/45 p-3;
-  }
-
-  .landing-preview-fund {
-    @apply rounded-xl bg-white/50 p-4;
   }
 }

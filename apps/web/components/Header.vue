@@ -3,7 +3,7 @@
     class="sticky top-0 z-50 backdrop-blur-sm"
     :class="
       isLanding
-        ? 'bg-baax-blue-50/80'
+        ? 'bg-baax-purple-50/80'
         : 'border-b border-baax-blue-100 bg-white/95 backdrop-blur'
     "
   >
