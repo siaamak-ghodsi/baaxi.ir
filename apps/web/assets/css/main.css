@@ -81,4 +81,20 @@
   .landing-subline {
     @apply mx-auto mt-3 max-w-md text-sm leading-relaxed text-baax-blue-600/75 sm:mx-0 sm:text-base;
   }
+
+  .landing-preview {
+    @apply mx-auto mt-10 max-w-lg space-y-3 sm:mx-0 sm:mt-12 sm:max-w-none;
+  }
+
+  .landing-preview-stats {
+    @apply grid grid-cols-3 gap-2;
+  }
+
+  .landing-preview-stat {
+    @apply rounded-xl bg-white/30 p-3 backdrop-blur-[2px];
+  }
+
+  .landing-preview-fund {
+    @apply rounded-xl bg-white/35 p-4 backdrop-blur-[2px];
+  }
 }
