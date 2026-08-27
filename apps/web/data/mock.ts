@@ -1,6 +1,48 @@
-export type FundType = "rosca" | "savings_loan";
+export type FundType = "rosca" | "savings_loan" | "diyah";
 export type PaymentStatus = "paid" | "pending" | "overdue" | "waiting";
 export type CycleStatus = "open" | "closed";
+export type PayoutRequestType = "court_verdict" | "settlement";
+export type PayoutRequestStatus = "pending" | "released" | "rejected";
+export type TrusteeRole = "ameen" | "aman";
+
+import { generateCharter } from "~/utils/charter";
+import type { FundCharter } from "~/utils/charter";
+
+export type { FundCharter } from "~/utils/charter";
+
+export interface TrusteeSeat {
+  role: TrusteeRole;
+  name: string;
+  phone?: string;
+}
+
+export interface TrusteeApproval {
+  role: TrusteeRole;
+  approved: boolean;
+  at: string;
+  byName: string;
+}
+
+export interface MemberVote {
+  memberId: string;
+  memberName: string;
+  yes: boolean;
+  at: string;
+}
+
+export interface PayoutRequest {
+  id: string;
+  type: PayoutRequestType;
+  amount: number;
+  note: string;
+  fileName?: string;
+  requestedBy: string;
+  requestedAt: string;
+  status: PayoutRequestStatus;
+  trusteeApprovals: TrusteeApproval[];
+  memberVotes: MemberVote[];
+  releasedAt?: string;
+}
 
 export interface FundMember {
   id: string;
@@ -10,6 +52,7 @@ export interface FundMember {
   isWinner?: boolean;
   daysOverdue?: number;
   preWin?: boolean;
+  rulesAcceptedAt?: string;
 }
 
 export interface LedgerEntry {
@@ -44,6 +87,11 @@ export interface Fund {
   installmentAmount?: number;
   collateralType?: "promissory_note" | "cheque";
   collateralFaceValue?: number;
+  charter?: FundCharter;
+  isFamily?: boolean;
+  trustees?: TrusteeSeat[];
+  payoutRequests?: PayoutRequest[];
+  poolBalance?: number;
 }
 
 export interface ShopPartner {
@@ -177,6 +225,47 @@ export const seedFunds: Fund[] = [
       { id: "rl2", date: "۱۴۰۴/۰۴/۰۲", label: "کارمزد", amount: 4_000_000, type: "fee", balance: 196_000_000 },
     ],
   },
+  {
+    id: "diyah-family-6",
+    name: "صندوق دیه — خانواده احمدی",
+    type: "diyah",
+    monthlyAmount: 2_000_000,
+    memberCount: 6,
+    filledSeats: 4,
+    waitlistCount: 0,
+    currentCycle: 1,
+    totalCycles: 12,
+    nextDrawDate: "۱۴۰۴/۰۷/۰۱",
+    platformFeePercent: 1,
+    organizerName: "سیاامک غ.",
+    cycleStatus: "open",
+    isFamily: true,
+    poolBalance: 8_000_000,
+    trustees: [
+      { role: "ameen", name: "رضا ن.", phone: "09131111111" },
+      { role: "aman", name: "مریم ح." },
+    ],
+    charter: generateCharter({
+      type: "diyah",
+      name: "صندوق دیه — خانواده احمدی",
+      memberCount: 6,
+      monthlyAmount: 2_000_000,
+      totalCycles: 12,
+      isFamily: true,
+      ameenName: "رضا ن.",
+      amanName: "مریم ح.",
+    }),
+    payoutRequests: [],
+    members: [
+      { id: "d1", name: "رضا ن.", seat: 1, status: "paid", rulesAcceptedAt: "2026-01-02T00:00:00.000Z" },
+      { id: "d2", name: "فاطمه ر.", seat: 2, status: "paid", rulesAcceptedAt: "2026-01-02T00:00:00.000Z" },
+      { id: "d3", name: "حسین ب.", seat: 3, status: "pending", rulesAcceptedAt: "2026-01-03T00:00:00.000Z" },
+      { id: "d4", name: "سارا د.", seat: 4, status: "paid", rulesAcceptedAt: "2026-01-03T00:00:00.000Z" },
+    ],
+    ledger: [
+      { id: "dy1", date: "۱۴۰۴/۰۶/۰۱", label: "واریز اعضا", amount: 8_000_000, type: "credit", balance: 8_000_000 },
+    ],
+  },
 ];
 
 export const shopPartners: ShopPartner[] = [
@@ -225,7 +314,95 @@ export function formatToman(amount: number): string {
 }
 
 export function fundTypeLabel(type: FundType): string {
-  return type === "rosca" ? "قرعه‌کشی" : "پس‌انداز/وام";
+  if (type === "rosca") return "قرعه‌کشی";
+  if (type === "savings_loan") return "پس‌انداز/وام";
+  return "دیه";
+}
+
+export function fundTypeBadgeClass(type: FundType): string {
+  if (type === "rosca") return "bg-baax-blue-100 text-baax-blue-700";
+  if (type === "savings_loan") return "bg-emerald-50 text-emerald-700";
+  return "bg-baax-purple-500/10 text-baax-purple-600";
+}
+
+export function payoutTypeLabel(type: PayoutRequestType): string {
+  return type === "court_verdict" ? "حکم دادگاه" : "گرفتن رضایت";
+}
+
+export function trusteeRoleLabel(role: TrusteeRole): string {
+  return role === "ameen" ? "امین" : "امان";
+}
+
+export function getTrusteeSeat(fund: Fund, role: TrusteeRole): TrusteeSeat | undefined {
+  return fund.trustees?.find((t) => t.role === role);
+}
+
+export function isUserTrustee(fund: Fund, userName: string, userPhone: string): TrusteeRole | null {
+  if (fund.type !== "diyah" || !fund.trustees) return null;
+  for (const seat of fund.trustees) {
+    if (seat.phone && seat.phone === userPhone) return seat.role;
+    if (!seat.phone && seat.name === userName) return seat.role;
+  }
+  return null;
+}
+
+export function voteThreshold(memberCount: number): number {
+  return Math.ceil(memberCount * 0.5);
+}
+
+export function countYesVotes(request: PayoutRequest): number {
+  return request.memberVotes.filter((v) => v.yes).length;
+}
+
+export function bothTrusteesApproved(request: PayoutRequest): boolean {
+  const ameen = request.trusteeApprovals.find((a) => a.role === "ameen" && a.approved);
+  const aman = request.trusteeApprovals.find((a) => a.role === "aman" && a.approved);
+  return Boolean(ameen && aman);
+}
+
+export function hasTrusteeRejected(request: PayoutRequest): boolean {
+  return request.trusteeApprovals.some((a) => !a.approved);
+}
+
+export function trusteeDecision(
+  request: PayoutRequest,
+  role: TrusteeRole
+): boolean | undefined {
+  const decision = request.trusteeApprovals.find((a) => a.role === role);
+  return decision ? decision.approved : undefined;
+}
+
+export function bothTrusteesDecided(request: PayoutRequest): boolean {
+  return (
+    trusteeDecision(request, "ameen") !== undefined &&
+    trusteeDecision(request, "aman") !== undefined
+  );
+}
+
+export function isTrusteePathExhausted(request: PayoutRequest): boolean {
+  if (hasTrusteeRejected(request)) return true;
+  return bothTrusteesDecided(request) && !bothTrusteesApproved(request);
+}
+
+export function remainingVoters(fund: Fund, request: PayoutRequest): number {
+  const voted = new Set(request.memberVotes.map((v) => v.memberId));
+  return fund.members.filter((m) => !voted.has(m.id)).length;
+}
+
+export function maxPossibleYesVotes(fund: Fund, request: PayoutRequest): number {
+  return countYesVotes(request) + remainingVoters(fund, request);
+}
+
+export function isVotePathExhausted(fund: Fund, request: PayoutRequest): boolean {
+  const threshold = voteThreshold(fund.members.length);
+  const yes = countYesVotes(request);
+  if (yes >= threshold) return false;
+  if (maxPossibleYesVotes(fund, request) < threshold) return true;
+  return remainingVoters(fund, request) === 0;
+}
+
+export function shouldRejectPayout(fund: Fund, request: PayoutRequest): boolean {
+  return isTrusteePathExhausted(request) && isVotePathExhausted(fund, request);
 }
 
 export function cycleStatusLabel(status: CycleStatus): string {
