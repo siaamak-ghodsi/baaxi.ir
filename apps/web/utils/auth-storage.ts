@@ -29,6 +29,18 @@ export const seedUsers: UserRecord[] = [
     role: "organizer",
     joinedFundIds: [],
   },
+  {
+    name: "رضا ن.",
+    phone: "09131111111",
+    role: "member",
+    joinedFundIds: ["diyah-family-6"],
+  },
+  {
+    name: "مریم ح.",
+    phone: "09132222222",
+    role: "member",
+    joinedFundIds: [],
+  },
 ];
 
 export function normalizePhone(input: string): string {

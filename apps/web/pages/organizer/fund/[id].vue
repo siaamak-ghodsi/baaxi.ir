@@ -11,13 +11,10 @@
         <div>
           <span
             class="inline-block rounded-full px-2.5 py-0.5 text-xs font-medium"
-            :class="
-              fund.type === 'rosca'
-                ? 'bg-baax-blue-100 text-baax-blue-700'
-                : 'bg-emerald-50 text-emerald-700'
-            "
+            :class="fundTypeBadgeClass(fund.type)"
           >
             {{ fundTypeLabel(fund.type) }}
+            <span v-if="fund.isFamily"> · خانوادگی</span>
           </span>
           <h1 class="mt-2 text-xl font-bold text-baax-blue-900">{{ fund.name }}</h1>
         </div>
@@ -65,13 +62,24 @@
       </div>
     </section>
 
-    <section v-else class="card mb-6">
+    <section v-else-if="fund.type === 'savings_loan'" class="card mb-6">
       <h2 class="section-title mb-4">پس‌انداز/وام</h2>
       <div class="grid gap-4 sm:grid-cols-3">
         <InfoRow label="سقف وام" :value="formatToman(fund.loanCap ?? 0)" highlight />
         <InfoRow label="حق عضویت" :value="formatToman(fund.membershipFee ?? 0)" />
         <InfoRow label="قسط" :value="formatToman(fund.installmentAmount ?? 0)" />
       </div>
+    </section>
+
+    <section v-else-if="fund.type === 'diyah'" class="card mb-6">
+      <h2 class="section-title mb-4">دیه</h2>
+      <div class="grid gap-4 sm:grid-cols-3">
+        <InfoRow label="سهم ماهانه" :value="formatToman(fund.monthlyAmount)" />
+        <InfoRow label="موجودی" :value="formatToman(fund.poolBalance ?? 0)" highlight />
+        <InfoRow label="امین" :value="fund.trustees?.find(t => t.role === 'ameen')?.name ?? '—'" />
+        <InfoRow label="امان" :value="fund.trustees?.find(t => t.role === 'aman')?.name ?? '—'" />
+      </div>
+      <FundCharterPanel v-if="fund.charter" :fund="fund" class="mt-4" />
     </section>
 
     <section class="card mb-6">
@@ -133,6 +141,7 @@ import {
   cycleStatusLabel,
   formatToman,
   fundServiceFee,
+  fundTypeBadgeClass,
   fundTypeLabel,
   replaceableMembers,
 } from "~/data/mock";

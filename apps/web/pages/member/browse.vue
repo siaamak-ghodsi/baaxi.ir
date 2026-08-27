@@ -19,46 +19,48 @@
           <button
             type="button"
             class="btn-secondary mt-2 w-full text-sm"
-            :disabled="joining === fund.id"
-            @click="onJoin(fund.id)"
+            @click="openJoin(fund.id)"
           >
-            {{ joining === fund.id ? "در حال پیوستن…" : "پیوستن" }}
+            پیوستن
           </button>
-          <p v-if="joinError[fund.id]" class="mt-1 text-xs text-red-600">{{ joinError[fund.id] }}</p>
         </div>
       </div>
       <p v-else class="text-sm text-baax-blue-500">صندوق باز جدیدی نیست.</p>
     </section>
+
+    <JoinFundDialog
+      v-if="joinTarget"
+      :fund="joinTarget"
+      :open="Boolean(joinTarget)"
+      @close="joinTarget = null"
+      @joined="onJoined"
+    />
   </div>
 </template>
 
 <script setup lang="ts">
+import type { Fund } from "~/data/mock";
+
 definePageMeta({ auth: "member" });
 
 const router = useRouter();
-const { session, currentUser } = useAuth();
-const { memberFunds, browsableFunds, joinFund } = useFunds();
+const { currentUser } = useAuth();
+const { memberFunds, browsableFunds, getFund } = useFunds();
 
 const user = computed(() => currentUser());
 const myFunds = computed(() => memberFunds(user.value?.joinedFundIds ?? []));
 const browseFunds = computed(() => browsableFunds(user.value?.joinedFundIds ?? []));
 
-const joining = ref<string | null>(null);
-const joinError = ref<Record<string, string>>({});
+const joinTarget = ref<Fund | null>(null);
 
-async function onJoin(fundId: string) {
-  if (!session.value) return;
-  joining.value = fundId;
-  joinError.value = { ...joinError.value, [fundId]: "" };
+function openJoin(fundId: string) {
+  const fund = getFund(fundId);
+  if (fund) joinTarget.value = fund;
+}
 
-  const result = joinFund(fundId, session.value.name, session.value.phone);
-  joining.value = null;
-
-  if (!result.ok) {
-    joinError.value = { ...joinError.value, [fundId]: result.error };
-    return;
-  }
-
-  await router.push(`/fund/${fundId}`);
+async function onJoined() {
+  const id = joinTarget.value?.id;
+  joinTarget.value = null;
+  if (id) await router.push(`/fund/${id}`);
 }
 </script>

@@ -11,13 +11,10 @@
         <div>
           <span
             class="inline-block rounded-full px-2.5 py-0.5 text-xs font-medium"
-            :class="
-              fund.type === 'rosca'
-                ? 'bg-baax-blue-100 text-baax-blue-700'
-                : 'bg-emerald-50 text-emerald-700'
-            "
+            :class="fundTypeBadgeClass(fund.type)"
           >
             {{ fundTypeLabel(fund.type) }}
+            <span v-if="fund.isFamily" class="mr-1">· خانوادگی</span>
           </span>
           <h1 class="mt-2 text-2xl font-bold text-baax-blue-900">{{ fund.name }}</h1>
         </div>
@@ -42,7 +39,7 @@
       </div>
     </section>
 
-    <section v-else class="card">
+    <section v-else-if="fund.type === 'savings_loan'" class="card">
       <h2 class="section-title mb-4">پس‌انداز/وام</h2>
       <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         <InfoRow label="سقف وام" :value="formatToman(fund.loanCap ?? 0)" highlight />
@@ -52,6 +49,18 @@
         <InfoRow label="اعضا" :value="`${fund.filledSeats}/${fund.memberCount}`" />
         <InfoRow label="وثیقه" :value="formatToman(fund.collateralFaceValue ?? 0)" />
       </div>
+    </section>
+
+    <DiyahPayoutPanel
+      v-if="fund.type === 'diyah' && (isMember || trusteeRole)"
+      :fund="fund"
+      :is-member="isMember"
+      :user-name="session?.name ?? ''"
+      :user-phone="session?.phone ?? ''"
+    />
+
+    <section v-if="fund.type !== 'diyah' && fund.charter" class="card mt-6">
+      <FundCharterPanel :fund="fund" />
     </section>
 
     <section class="card mt-6">
@@ -64,33 +73,40 @@
         v-if="canJoin"
         type="button"
         class="btn-primary"
-        :disabled="joining"
-        @click="onJoin"
+        @click="showJoinDialog = true"
       >
-        {{ joining ? "در حال پیوستن…" : "پیوستن" }}
+        پیوستن
       </button>
       <NuxtLink v-if="isMember" :to="`/ledger?fund=${fund.id}`" class="btn-primary">دفترکل</NuxtLink>
       <NuxtLink v-if="isMember && fund.type === 'rosca'" to="/quick-buy" class="btn-secondary">
         خرید زودهنگام
       </NuxtLink>
     </div>
-    <p v-if="joinError" class="mt-2 text-sm text-red-600">{{ joinError }}</p>
+
+    <JoinFundDialog
+      v-if="fund"
+      :fund="fund"
+      :open="showJoinDialog"
+      @close="showJoinDialog = false"
+      @joined="onJoined"
+    />
   </div>
 </template>
 
 <script setup lang="ts">
-import { formatToman, fundTypeLabel } from "~/data/mock";
+import { formatToman, fundTypeBadgeClass, fundTypeLabel } from "~/data/mock";
 
 definePageMeta({ auth: "member" });
 
 const route = useRoute();
 const router = useRouter();
 const { session, currentUser } = useAuth();
-const { getFund, joinFund, funds } = useFunds();
+const { getFund, funds, isUserTrustee } = useFunds();
 
 const fundId = computed(() => route.params.id as string);
 const fund = computed(() => getFund(fundId.value));
 const user = computed(() => currentUser());
+const showJoinDialog = ref(false);
 
 watchEffect(() => {
   if (import.meta.client && funds.value.length && !fund.value) {
@@ -107,22 +123,13 @@ const canJoin = computed(() => {
   return fund.value.filledSeats < fund.value.memberCount;
 });
 
-const joining = ref(false);
-const joinError = ref("");
+const trusteeRole = computed(() => {
+  if (!fund.value || !session.value) return null;
+  return isUserTrustee(fund.value, session.value.name, session.value.phone);
+});
 
-async function onJoin() {
-  if (!session.value || !fund.value) return;
-  joining.value = true;
-  joinError.value = "";
-
-  const result = joinFund(fundId.value, session.value.name, session.value.phone);
-  joining.value = false;
-
-  if (!result.ok) {
-    joinError.value = result.error;
-    return;
-  }
-
+async function onJoined() {
+  showJoinDialog.value = false;
   await router.push("/member");
 }
 </script>

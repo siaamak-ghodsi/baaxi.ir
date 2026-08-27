@@ -7,13 +7,10 @@
       <div>
         <span
           class="inline-block rounded-full px-2.5 py-0.5 text-xs font-medium"
-          :class="
-            fund.type === 'rosca'
-              ? 'bg-baax-blue-100 text-baax-blue-700'
-              : 'bg-emerald-50 text-emerald-700'
-          "
+          :class="fundTypeBadgeClass(fund.type)"
         >
           {{ fundTypeLabel(fund.type) }}
+          <span v-if="fund.isFamily"> · خانوادگی</span>
         </span>
         <h3 class="mt-2 font-bold text-baax-blue-900">{{ fund.name }}</h3>
       </div>
@@ -44,6 +41,12 @@
           <p class="stat-value text-sm">{{ formatToman(fund.installmentAmount ?? 0) }}</p>
         </div>
       </template>
+      <template v-if="fund.type === 'diyah'">
+        <div>
+          <p class="stat-label">موجودی</p>
+          <p class="stat-value text-sm">{{ formatToman(fund.poolBalance ?? 0) }}</p>
+        </div>
+      </template>
       <div>
         <p class="stat-label">اعضا</p>
         <p class="stat-value text-sm">{{ fund.filledSeats }}/{{ fund.memberCount }}</p>
@@ -54,7 +57,7 @@
 
 <script setup lang="ts">
 import type { Fund } from "~/data/mock";
-import { formatToman, fundTypeLabel } from "~/data/mock";
+import { formatToman, fundTypeBadgeClass, fundTypeLabel } from "~/data/mock";
 
 const props = withDefaults(
   defineProps<{ fund: Fund; variant?: "member" | "organizer" }>(),
