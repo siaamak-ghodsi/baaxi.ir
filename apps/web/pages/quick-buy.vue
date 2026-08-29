@@ -1,46 +1,44 @@
 <template>
   <div>
-    <header class="mb-6">
-      <NuxtLink to="/member" class="mb-2 inline-block text-sm text-baax-blue-500 hover:text-baax-blue-700">
-        ← خانه
-      </NuxtLink>
-      <h1 class="text-2xl font-bold text-baax-blue-900">خرید زودهنگام</h1>
+    <header class="mb-5">
+      <NuxtLink to="/member" class="breadcrumb-link mb-2 inline-block text-sm">← خانه</NuxtLink>
+      <h1 class="page-title">خرید زودهنگام</h1>
     </header>
 
-    <section class="card mb-6">
-      <div class="space-y-3 text-sm">
+    <section class="card mb-4">
+      <div class="space-y-2.5 text-sm">
         <FlowRow label="مبلغ برد" :value="formatToman(MOCK_WIN_AMOUNT)" />
         <FlowRow label="بدهی شریک" :value="`− ${formatToman(MOCK_PARTNER_DEBT)}`" variant="debt" />
-        <div class="border-t border-baax-blue-100 pt-3">
+        <div class="border-t border-baax-blue-100 pt-2.5">
           <FlowRow label="نقد" :value="formatToman(cashAfterDebt)" highlight />
         </div>
       </div>
     </section>
 
-    <section class="card mb-6">
-      <h2 class="section-title mb-4">شریک</h2>
-      <div class="grid gap-3 sm:grid-cols-3">
+    <section class="card mb-4">
+      <h2 class="section-title mb-3">شریک</h2>
+      <div class="grid gap-2 sm:grid-cols-3">
         <button
           v-for="p in shopPartners"
           :key="p.id"
           type="button"
-          class="rounded-xl border p-4 text-right transition"
+          class="rounded-lg border p-3 text-right transition"
           :class="
             selectedPartner === p.id
-              ? 'border-baax-purple-500 bg-baax-purple-500/5 ring-2 ring-baax-purple-500'
+              ? 'choice-btn-active border-baax-purple-500 ring-2 ring-baax-purple-500/20'
               : 'border-baax-blue-100 hover:border-baax-blue-200'
           "
           @click="selectedPartner = p.id"
         >
-          <div class="mb-2 h-2 w-8 rounded-full" :style="{ backgroundColor: p.logoColor }" />
-          <p class="font-semibold text-baax-blue-900">{{ p.name }}</p>
-          <p class="mt-1 text-xs text-baax-blue-500">{{ formatToman(p.maxCredit) }}</p>
+          <div class="mb-1.5 h-1.5 w-7 rounded-full" :style="{ backgroundColor: p.logoColor }" />
+          <p class="text-sm font-semibold text-baax-blue-900">{{ p.name }}</p>
+          <p class="mt-0.5 text-2xs tabular-nums text-baax-blue-500">{{ formatToman(p.maxCredit) }}</p>
         </button>
       </div>
     </section>
 
-    <section class="card mb-6">
-      <h2 class="section-title mb-4">مبلغ</h2>
+    <section class="card mb-4">
+      <h2 class="section-title mb-3">مبلغ</h2>
       <input
         v-model.number="purchaseAmount"
         type="range"
@@ -49,14 +47,14 @@
         :step="500_000"
         class="w-full accent-baax-purple-600"
       />
-      <p class="mt-2 text-center text-lg font-bold text-baax-blue-900">
+      <p class="stat-value-lg mt-2 text-center">
         {{ formatToman(purchaseAmount) }}
       </p>
     </section>
 
     <section class="card">
       <FlowRow label="باقی‌مانده نقد" :value="formatToman(Math.max(remainingCash, 0))" highlight />
-      <button type="button" class="btn-primary mt-6 w-full" disabled>تأیید</button>
+      <button type="button" class="btn-primary mt-5 w-full" disabled>تأیید</button>
     </section>
   </div>
 </template>

@@ -1,20 +1,20 @@
 <template>
-  <div class="overflow-x-auto">
-    <table class="w-full text-sm">
+  <div class="overflow-x-auto px-4 pb-1 pt-3">
+    <table class="w-full">
       <thead>
-        <tr class="border-b border-baax-blue-100 text-right">
-          <th class="pb-3 pr-2 font-medium text-baax-blue-600">تاریخ</th>
-          <th class="pb-3 font-medium text-baax-blue-600">شرح</th>
-          <th class="pb-3 pl-2 text-left font-medium text-baax-blue-600">مبلغ</th>
-          <th class="pb-3 pl-2 text-left font-medium text-baax-blue-600">مانده</th>
+        <tr class="table-head">
+          <th class="table-th pr-2">تاریخ</th>
+          <th class="table-th">شرح</th>
+          <th class="table-th pl-2 text-left">مبلغ</th>
+          <th class="table-th pl-2 text-left">مانده</th>
         </tr>
       </thead>
-      <tbody class="divide-y divide-baax-blue-50">
-        <tr v-for="entry in entries" :key="entry.id">
-          <td class="py-3 pr-2 text-baax-blue-700">{{ entry.date }}</td>
-          <td class="py-3 text-baax-blue-900">{{ entry.label }}</td>
+      <tbody>
+        <tr v-for="entry in entries" :key="entry.id" class="table-row">
+          <td class="table-td pr-2 tabular-nums text-baax-blue-600">{{ entry.date }}</td>
+          <td class="table-td text-baax-blue-900">{{ entry.label }}</td>
           <td
-            class="py-3 pl-2 text-left font-medium"
+            class="table-td pl-2 text-left font-medium tabular-nums"
             :class="{
               'text-emerald-600': entry.type === 'credit',
               'text-baax-blue-800': entry.type === 'debit',
@@ -23,7 +23,7 @@
           >
             {{ entry.type === "debit" ? "−" : "+" }}{{ formatToman(entry.amount) }}
           </td>
-          <td class="py-3 pl-2 text-left text-baax-blue-700">
+          <td class="table-td pl-2 text-left tabular-nums text-baax-blue-600">
             {{ formatToman(entry.balance) }}
           </td>
         </tr>

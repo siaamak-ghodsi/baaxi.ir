@@ -1,26 +1,26 @@
 <template>
   <div v-if="fund">
-    <nav class="mb-4 text-sm text-baax-blue-500">
-      <NuxtLink to="/organizer" class="hover:text-baax-blue-700">صندوق‌ها</NuxtLink>
-      <span class="mx-2">/</span>
-      <span class="text-baax-blue-800">{{ fund.name }}</span>
+    <nav class="breadcrumb">
+      <NuxtLink to="/organizer" class="breadcrumb-link">صندوق‌ها</NuxtLink>
+      <span>/</span>
+      <span class="breadcrumb-current">{{ fund.name }}</span>
     </nav>
 
-    <header class="card mb-6">
+    <header class="card mb-4">
       <div class="flex flex-wrap items-start justify-between gap-4">
         <div>
           <span
-            class="inline-block rounded-full px-2.5 py-0.5 text-xs font-medium"
+            class="badge"
             :class="fundTypeBadgeClass(fund.type)"
           >
             {{ fundTypeLabel(fund.type) }}
             <span v-if="fund.isFamily"> · خانوادگی</span>
           </span>
-          <h1 class="mt-2 text-xl font-bold text-baax-blue-900">{{ fund.name }}</h1>
+          <h1 class="page-title mt-1.5">{{ fund.name }}</h1>
         </div>
-        <div class="flex flex-col items-end gap-2">
+        <div class="flex flex-col items-end gap-1.5">
           <span
-            class="rounded-full px-2.5 py-0.5 text-xs font-medium"
+            class="badge"
             :class="
               fund.cycleStatus === 'open'
                 ? 'bg-emerald-50 text-emerald-700'
@@ -29,27 +29,27 @@
           >
             دوره {{ cycleStatusLabel(fund.cycleStatus) }}
           </span>
-          <p class="text-sm text-baax-blue-500">{{ fund.currentCycle }}/{{ fund.totalCycles }}</p>
+          <p class="text-sm tabular-nums text-baax-blue-500">{{ fund.currentCycle }}/{{ fund.totalCycles }}</p>
         </div>
       </div>
     </header>
 
-    <section class="mb-6 grid gap-4 sm:grid-cols-4">
-      <div class="card">
+    <section class="mb-4 grid gap-2.5 sm:grid-cols-4">
+      <div class="stat-card">
         <p class="stat-label">پرداخت‌شده</p>
-        <p class="mt-1 text-lg font-bold text-emerald-600">{{ paidCount }}</p>
+        <p class="stat-value-lg mt-1 text-emerald-600">{{ paidCount }}</p>
       </div>
-      <div class="card">
+      <div class="stat-card">
         <p class="stat-label">معوق</p>
-        <p class="mt-1 text-lg font-bold text-red-600">{{ lateCount }}</p>
+        <p class="stat-value-lg mt-1 text-red-600">{{ lateCount }}</p>
       </div>
-      <div class="card">
+      <div class="stat-card">
         <p class="stat-label">انتظار</p>
-        <p class="mt-1 text-lg font-bold text-baax-blue-900">{{ fund.waitlistCount }}</p>
+        <p class="stat-value-lg mt-1">{{ fund.waitlistCount }}</p>
       </div>
-      <div class="card">
+      <div class="stat-card">
         <p class="stat-label">کارمزد</p>
-        <p class="mt-1 text-lg font-bold text-baax-blue-900">{{ formatToman(fundServiceFee(fund)) }}</p>
+        <p class="stat-value-lg mt-1">{{ formatToman(fundServiceFee(fund)) }}</p>
       </div>
     </section>
 

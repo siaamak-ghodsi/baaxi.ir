@@ -2,27 +2,27 @@
   <Teleport to="body">
     <div
       v-if="open"
-      class="fixed inset-0 z-50 flex items-end justify-center bg-black/40 p-4 sm:items-center"
+      class="fixed inset-0 z-50 flex items-end justify-center bg-baax-blue-900/40 p-4 backdrop-blur-sm sm:items-center"
       @click.self="emit('close')"
     >
-      <div class="max-h-[85vh] w-full max-w-lg overflow-y-auto rounded-2xl bg-white p-6 shadow-xl">
-        <h2 class="text-lg font-bold text-baax-blue-900">اساسنامه صندوق</h2>
-        <p class="mt-1 text-sm text-baax-blue-500">{{ fund.name }}</p>
+      <div class="max-h-[85vh] w-full max-w-lg overflow-y-auto rounded-xl border border-baax-blue-100 bg-white p-5 shadow-card-hover">
+        <h2 class="section-title">اساسنامه صندوق</h2>
+        <p class="mt-0.5 text-sm text-baax-blue-500">{{ fund.name }}</p>
 
-        <FundCharterPanel class="mt-4" :fund="fund" :title="undefined" />
+        <FundCharterPanel class="mt-3" :fund="fund" :title="undefined" />
 
-        <label class="mt-4 flex cursor-pointer items-start gap-2">
+        <label class="mt-4 flex cursor-pointer items-start gap-2.5">
           <input
             v-model="accepted"
             type="checkbox"
-            class="mt-1 rounded border-baax-blue-300 text-baax-purple-600 focus:ring-baax-purple-500"
+            class="mt-0.5 rounded border-baax-blue-300 text-baax-purple-600 focus:ring-baax-purple-500"
           />
-          <span class="text-sm text-baax-blue-800">اساسنامه را خواندم و می‌پذیرم. پس از پیوستن قابل تغییر نیست.</span>
+          <span class="text-sm leading-relaxed text-baax-blue-700">اساسنامه را خواندم و می‌پذیرم. پس از پیوستن قابل تغییر نیست.</span>
         </label>
 
         <p v-if="error" class="mt-2 text-sm text-red-600">{{ error }}</p>
 
-        <div class="mt-6 flex flex-wrap gap-3">
+        <div class="mt-5 flex flex-wrap gap-2">
           <button
             type="button"
             class="btn-primary"

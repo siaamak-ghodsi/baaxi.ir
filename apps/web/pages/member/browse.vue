@@ -1,19 +1,19 @@
 <template>
   <div>
-    <header class="mb-6">
-      <h1 class="text-2xl font-bold text-baax-blue-900">صندوق‌ها</h1>
+    <header class="mb-5">
+      <h1 class="page-title">صندوق‌ها</h1>
     </header>
 
-    <section v-if="myFunds.length" class="mb-8">
-      <h2 class="section-title mb-4">عضویت من</h2>
-      <div class="grid gap-4 md:grid-cols-2">
+    <section v-if="myFunds.length" class="mb-6">
+      <h2 class="section-title mb-3">عضویت من</h2>
+      <div class="grid gap-3 md:grid-cols-2">
         <FundCard v-for="fund in myFunds" :key="fund.id" :fund="fund" />
       </div>
     </section>
 
     <section>
-      <h2 class="section-title mb-4">پیوستن</h2>
-      <div v-if="browseFunds.length" class="grid gap-4 md:grid-cols-2">
+      <h2 class="section-title mb-3">پیوستن</h2>
+      <div v-if="browseFunds.length" class="grid gap-3 md:grid-cols-2">
         <div v-for="fund in browseFunds" :key="fund.id">
           <FundCard :fund="fund" />
           <button

@@ -8,7 +8,7 @@
     >
       <div class="flex items-center gap-3">
         <span
-          class="flex h-8 w-8 items-center justify-center rounded-full bg-baax-blue-100 text-sm font-medium text-baax-blue-700"
+          class="flex h-7 w-7 items-center justify-center rounded-lg bg-baax-blue-100 text-xs font-semibold tabular-nums text-baax-blue-700"
         >
           {{ member.seat }}
         </span>
@@ -17,7 +17,7 @@
             {{ member.name }}
             <span
               v-if="member.isWinner"
-              class="mr-2 rounded bg-baax-purple-100 px-1.5 py-0.5 text-xs text-baax-purple-600"
+              class="badge mr-2 bg-baax-purple-100 text-baax-purple-700"
             >
               برنده
             </span>
@@ -34,7 +34,7 @@
         </div>
       </div>
       <span
-        class="rounded-full border px-2.5 py-0.5 text-xs font-medium"
+        class="badge"
         :class="paymentStatusClasses(member.status)"
       >
         {{ paymentStatusLabel(member.status) }}

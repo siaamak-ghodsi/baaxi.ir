@@ -1,40 +1,36 @@
 <template>
   <div>
-    <nav class="mb-4 text-sm text-baax-blue-500">
-      <NuxtLink to="/organizer" class="hover:text-baax-blue-700">صندوق‌ها</NuxtLink>
-      <span class="mx-2">/</span>
-      <span class="text-baax-blue-800">ایجاد صندوق</span>
+    <nav class="breadcrumb">
+      <NuxtLink to="/organizer" class="breadcrumb-link">صندوق‌ها</NuxtLink>
+      <span>/</span>
+      <span class="breadcrumb-current">ایجاد صندوق</span>
     </nav>
 
-    <header class="mb-6">
-      <h1 class="text-2xl font-bold text-baax-blue-900">ایجاد صندوق</h1>
+    <header class="mb-5">
+      <h1 class="page-title">ایجاد صندوق</h1>
     </header>
 
     <form class="card space-y-6" @submit.prevent="onSubmit">
       <div>
-        <label class="stat-label mb-1 block" for="name">نام صندوق</label>
+        <label class="input-label" for="name">نام صندوق</label>
         <input
           id="name"
           v-model="name"
           type="text"
           placeholder="مثلاً صندوق ۱۲ نفره — محله ولیعصر"
-          class="w-full rounded-xl border border-baax-blue-200 px-4 py-2.5 text-baax-blue-900 focus:border-baax-purple-500 focus:outline-none focus:ring-1 focus:ring-baax-purple-500"
+          class="input"
         />
       </div>
 
       <div>
-        <p class="stat-label mb-2">نوع صندوق</p>
+        <p class="input-label">نوع صندوق</p>
         <div class="grid grid-cols-3 gap-2">
           <button
             v-for="opt in typeOptions"
             :key="opt.value"
             type="button"
-            class="rounded-xl border px-3 py-2.5 text-sm transition"
-            :class="
-              type === opt.value
-                ? 'border-baax-purple-500 bg-baax-purple-500/5 text-baax-purple-600'
-                : 'border-baax-blue-200 text-baax-blue-700'
-            "
+            class="choice-btn"
+            :class="type === opt.value ? 'choice-btn-active' : ''"
             @click.prevent="type = opt.value"
           >
             {{ opt.label }}
@@ -44,23 +40,23 @@
 
       <div class="grid gap-4 sm:grid-cols-2">
         <div>
-          <label class="stat-label mb-1 block" for="memberCount">تعداد اعضا</label>
+          <label class="input-label" for="memberCount">تعداد اعضا</label>
           <input
             id="memberCount"
             v-model.number="memberCount"
             type="number"
             min="2"
-            class="w-full rounded-xl border border-baax-blue-200 px-4 py-2.5 text-baax-blue-900 focus:border-baax-purple-500 focus:outline-none focus:ring-1 focus:ring-baax-purple-500"
+            class="input"
           />
         </div>
         <div>
-          <label class="stat-label mb-1 block" for="totalCycles">تعداد دوره</label>
+          <label class="input-label" for="totalCycles">تعداد دوره</label>
           <input
             id="totalCycles"
             v-model.number="totalCycles"
             type="number"
             min="1"
-            class="w-full rounded-xl border border-baax-blue-200 px-4 py-2.5 text-baax-blue-900 focus:border-baax-purple-500 focus:outline-none focus:ring-1 focus:ring-baax-purple-500"
+            class="input"
           />
         </div>
       </div>
@@ -69,25 +65,25 @@
         <h2 class="section-title">قرعه‌کشی</h2>
         <div class="grid gap-4 sm:grid-cols-2">
           <div>
-            <label class="stat-label mb-1 block" for="monthlyAmount">مبلغ ماهانه (تومان)</label>
+            <label class="input-label" for="monthlyAmount">مبلغ ماهانه (تومان)</label>
             <input
               id="monthlyAmount"
               v-model.number="monthlyAmount"
               type="number"
               min="100000"
               step="100000"
-              class="w-full rounded-xl border border-baax-blue-200 bg-white px-4 py-2.5 text-baax-blue-900 focus:border-baax-purple-500 focus:outline-none focus:ring-1 focus:ring-baax-purple-500"
+              class="input"
             />
           </div>
           <div>
-            <label class="stat-label mb-1 block" for="potValue">ارزش پات (تومان)</label>
+            <label class="input-label" for="potValue">ارزش پات (تومان)</label>
             <input
               id="potValue"
               v-model.number="potValue"
               type="number"
               min="100000"
               step="100000"
-              class="w-full rounded-xl border border-baax-blue-200 bg-white px-4 py-2.5 text-baax-blue-900 focus:border-baax-purple-500 focus:outline-none focus:ring-1 focus:ring-baax-purple-500"
+              class="input"
             />
           </div>
         </div>
@@ -97,47 +93,47 @@
         <h2 class="section-title">پس‌انداز/وام</h2>
         <div class="grid gap-4 sm:grid-cols-2">
           <div>
-            <label class="stat-label mb-1 block" for="savingsAmount">پس‌انداز ماهانه (تومان)</label>
+            <label class="input-label" for="savingsAmount">پس‌انداز ماهانه (تومان)</label>
             <input
               id="savingsAmount"
               v-model.number="monthlyAmount"
               type="number"
               min="100000"
               step="100000"
-              class="w-full rounded-xl border border-baax-blue-200 bg-white px-4 py-2.5 text-baax-blue-900 focus:border-baax-purple-500 focus:outline-none focus:ring-1 focus:ring-baax-purple-500"
+              class="input"
             />
           </div>
           <div>
-            <label class="stat-label mb-1 block" for="loanCap">سقف وام (تومان)</label>
+            <label class="input-label" for="loanCap">سقف وام (تومان)</label>
             <input
               id="loanCap"
               v-model.number="loanCap"
               type="number"
               min="100000"
               step="100000"
-              class="w-full rounded-xl border border-baax-blue-200 bg-white px-4 py-2.5 text-baax-blue-900 focus:border-baax-purple-500 focus:outline-none focus:ring-1 focus:ring-baax-purple-500"
+              class="input"
             />
           </div>
           <div>
-            <label class="stat-label mb-1 block" for="membershipFee">حق عضویت (تومان)</label>
+            <label class="input-label" for="membershipFee">حق عضویت (تومان)</label>
             <input
               id="membershipFee"
               v-model.number="membershipFee"
               type="number"
               min="0"
               step="50000"
-              class="w-full rounded-xl border border-baax-blue-200 bg-white px-4 py-2.5 text-baax-blue-900 focus:border-baax-purple-500 focus:outline-none focus:ring-1 focus:ring-baax-purple-500"
+              class="input"
             />
           </div>
           <div>
-            <label class="stat-label mb-1 block" for="installmentAmount">قسط (تومان)</label>
+            <label class="input-label" for="installmentAmount">قسط (تومان)</label>
             <input
               id="installmentAmount"
               v-model.number="installmentAmount"
               type="number"
               min="100000"
               step="100000"
-              class="w-full rounded-xl border border-baax-blue-200 bg-white px-4 py-2.5 text-baax-blue-900 focus:border-baax-purple-500 focus:outline-none focus:ring-1 focus:ring-baax-purple-500"
+              class="input"
             />
           </div>
         </div>
@@ -159,23 +155,23 @@
         </label>
 
         <div>
-          <label class="stat-label mb-1 block" for="diyahAmount">سهم ماهانه (تومان)</label>
+          <label class="input-label" for="diyahAmount">سهم ماهانه (تومان)</label>
           <input
             id="diyahAmount"
             v-model.number="monthlyAmount"
             type="number"
             min="100000"
             step="100000"
-            class="w-full rounded-xl border border-baax-blue-200 bg-white px-4 py-2.5 text-baax-blue-900 focus:border-baax-purple-500 focus:outline-none focus:ring-1 focus:ring-baax-purple-500"
+            class="input"
           />
         </div>
 
         <div class="grid gap-4 sm:grid-cols-2">
           <div>
-            <label class="stat-label mb-1 block">امین</label>
+            <label class="input-label">امین</label>
             <select
               v-model="ameenPick"
-              class="mb-2 w-full rounded-xl border border-baax-blue-200 bg-white px-3 py-2 text-sm focus:border-baax-purple-500 focus:outline-none focus:ring-1 focus:ring-baax-purple-500"
+              class="input text-sm"
             >
               <option value="">انتخاب کاربر یا نام جدید…</option>
               <option v-for="u in users" :key="u.phone" :value="u.name">{{ u.name }}</option>
@@ -186,14 +182,14 @@
               v-model="ameenCustom"
               type="text"
               placeholder="نام امین"
-              class="w-full rounded-xl border border-baax-blue-200 bg-white px-3 py-2 text-sm focus:border-baax-purple-500 focus:outline-none focus:ring-1 focus:ring-baax-purple-500"
+              class="input text-sm"
             />
           </div>
           <div>
-            <label class="stat-label mb-1 block">امان</label>
+            <label class="input-label">امان</label>
             <select
               v-model="amanPick"
-              class="mb-2 w-full rounded-xl border border-baax-blue-200 bg-white px-3 py-2 text-sm focus:border-baax-purple-500 focus:outline-none focus:ring-1 focus:ring-baax-purple-500"
+              class="input text-sm"
             >
               <option value="">انتخاب کاربر یا نام جدید…</option>
               <option v-for="u in users" :key="u.phone" :value="u.name">{{ u.name }}</option>
@@ -204,7 +200,7 @@
               v-model="amanCustom"
               type="text"
               placeholder="نام امان"
-              class="w-full rounded-xl border border-baax-blue-200 bg-white px-3 py-2 text-sm focus:border-baax-purple-500 focus:outline-none focus:ring-1 focus:ring-baax-purple-500"
+              class="input text-sm"
             />
           </div>
         </div>

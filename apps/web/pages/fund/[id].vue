@@ -1,27 +1,27 @@
 <template>
   <div v-if="fund">
-    <nav class="mb-4 text-sm text-baax-blue-500">
-      <NuxtLink to="/member" class="hover:text-baax-blue-700">خانه</NuxtLink>
-      <span class="mx-2">/</span>
-      <span class="text-baax-blue-800">{{ fund.name }}</span>
+    <nav class="breadcrumb">
+      <NuxtLink to="/member" class="breadcrumb-link">خانه</NuxtLink>
+      <span>/</span>
+      <span class="breadcrumb-current">{{ fund.name }}</span>
     </nav>
 
-    <header class="card mb-6">
+    <header class="card mb-4">
       <div class="flex flex-wrap items-start justify-between gap-4">
         <div>
           <span
-            class="inline-block rounded-full px-2.5 py-0.5 text-xs font-medium"
+            class="badge"
             :class="fundTypeBadgeClass(fund.type)"
           >
             {{ fundTypeLabel(fund.type) }}
             <span v-if="fund.isFamily" class="mr-1">· خانوادگی</span>
           </span>
-          <h1 class="mt-2 text-2xl font-bold text-baax-blue-900">{{ fund.name }}</h1>
+          <h1 class="page-title mt-1.5">{{ fund.name }}</h1>
         </div>
         <div class="text-left">
           <p class="stat-label">دوره</p>
-          <p class="text-2xl font-bold text-baax-purple-600">
-            {{ fund.currentCycle }}<span class="text-base font-normal text-baax-blue-500">/{{ fund.totalCycles }}</span>
+          <p class="stat-value-lg text-baax-purple-600">
+            {{ fund.currentCycle }}<span class="text-sm font-normal text-baax-blue-400">/{{ fund.totalCycles }}</span>
           </p>
         </div>
       </div>
@@ -59,16 +59,16 @@
       :user-phone="session?.phone ?? ''"
     />
 
-    <section v-if="fund.type !== 'diyah' && fund.charter" class="card mt-6">
+    <section v-if="fund.type !== 'diyah' && fund.charter" class="card mt-4">
       <FundCharterPanel :fund="fund" />
     </section>
 
-    <section class="card mt-6">
+    <section class="card mt-4">
       <h2 class="section-title mb-4">اعضا</h2>
       <MemberList :members="fund.members" />
     </section>
 
-    <div class="mt-6 flex flex-wrap gap-3">
+    <div class="mt-4 flex flex-wrap gap-2">
       <button
         v-if="canJoin"
         type="button"
