@@ -1,5 +1,6 @@
 import type { Session, UserRecord, UserRole } from "~/utils/auth-storage";
 import {
+  findUserByCredentials,
   findUserByPhone,
   loadSession,
   loadUsers,
@@ -7,6 +8,7 @@ import {
   registerUser,
   saveSession,
 } from "~/utils/auth-storage";
+import { validateNationalId } from "~/utils/national-id";
 
 export function useAuth() {
   const session = useState<Session | null>("auth-session", () => null);
@@ -21,23 +23,44 @@ export function useAuth() {
   }
 
   function setSession(user: UserRecord) {
-    const next: Session = { name: user.name, phone: user.phone, role: user.role };
+    const next: Session = {
+      name: user.name,
+      phone: user.phone,
+      nationalId: user.nationalId,
+      role: user.role,
+    };
     session.value = next;
     saveSession(next);
   }
 
-  function signup(name: string, phone: string, role: UserRole) {
+  function signup(name: string, phone: string, nationalId: string, role: UserRole) {
     const normalized = normalizePhone(phone);
-    const result = registerUser({ name, phone: normalized, role, joinedFundIds: [] });
+    const idResult = validateNationalId(nationalId);
+    if (!idResult.ok) return { ok: false as const, error: idResult.error };
+    const result = registerUser({
+      name,
+      phone: normalized,
+      nationalId: idResult.value,
+      role,
+      joinedFundIds: [],
+    });
     if (!result.ok) return result;
     const user = findUserByPhone(normalized)!;
     setSession(user);
     return { ok: true as const };
   }
 
-  function login(phone: string) {
-    const user = findUserByPhone(phone);
-    if (!user) return { ok: false as const, error: "کاربری با این شماره یافت نشد" };
+  function login(phone: string, nationalId: string) {
+    const idResult = validateNationalId(nationalId);
+    if (!idResult.ok) return { ok: false as const, error: idResult.error };
+    const normalized = normalizePhone(phone);
+    if (!/^09\d{9}$/.test(normalized)) {
+      return { ok: false as const, error: "شماره موبایل معتبر نیست" };
+    }
+    const user = findUserByCredentials(normalized, idResult.value);
+    if (!user) {
+      return { ok: false as const, error: "کاربری با این مشخصات یافت نشد" };
+    }
     setSession(user);
     return { ok: true as const };
   }
