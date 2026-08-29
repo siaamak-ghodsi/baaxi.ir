@@ -1,42 +1,45 @@
 <template>
   <header
-    class="sticky top-0 z-50 backdrop-blur-sm"
+    class="sticky top-0 z-50"
     :class="
       isLanding
-        ? 'bg-baax-purple-50/80'
-        : 'border-b border-baax-blue-100 bg-white/95 backdrop-blur'
+        ? 'bg-baax-purple-50/90 backdrop-blur-md'
+        : 'border-b border-baax-blue-100/80 bg-white/95 backdrop-blur-md'
     "
   >
-    <div class="mx-auto flex max-w-5xl items-center justify-between gap-3 px-4 py-3">
+    <div class="mx-auto flex max-w-5xl items-center justify-between gap-3 px-4 py-2.5">
       <Logo :home="homeLink" />
-      <div v-if="!isLoggedIn" class="flex gap-2">
-        <NuxtLink to="/login" class="btn-secondary text-sm">ورود</NuxtLink>
-        <NuxtLink to="/signup" class="btn-primary text-sm">ثبت‌نام</NuxtLink>
+      <div v-if="!isLoggedIn" class="flex items-center gap-2">
+        <NuxtLink to="/login" class="btn-ghost hidden sm:inline-flex">ورود</NuxtLink>
+        <NuxtLink to="/login" class="btn-secondary h-9 px-3 text-xs sm:hidden">ورود</NuxtLink>
+        <NuxtLink to="/signup" class="btn-primary h-9 px-3.5 text-xs sm:h-10 sm:px-4 sm:text-sm">
+          ثبت‌نام
+        </NuxtLink>
       </div>
-      <div v-else class="flex items-center gap-3">
-        <span class="hidden text-sm text-baax-blue-600 sm:inline">{{ session?.name }}</span>
-        <button type="button" class="text-sm text-baax-blue-500 hover:text-red-600" @click="onLogout">
+      <div v-else class="flex items-center gap-2 sm:gap-3">
+        <span class="hidden max-w-[8rem] truncate text-sm font-medium text-baax-blue-700 sm:inline sm:max-w-none">
+          {{ session?.name }}
+        </span>
+        <button type="button" class="btn-ghost text-baax-blue-500 hover:text-red-600" @click="onLogout">
           خروج
         </button>
       </div>
     </div>
     <nav
       v-if="isLoggedIn && navItems.length"
-      class="flex gap-1 overflow-x-auto border-t border-baax-blue-50 px-4 py-2"
+      class="border-t border-baax-blue-100/60 bg-white/80 px-4 py-1.5"
     >
-      <NuxtLink
-        v-for="item in navItems"
-        :key="item.href"
-        :to="item.href"
-        class="whitespace-nowrap rounded-full px-3 py-1.5 text-xs transition sm:text-sm"
-        :class="
-          isActive(item.href)
-            ? 'bg-baax-purple-600 text-white'
-            : 'bg-baax-blue-100 text-baax-blue-700'
-        "
-      >
-        {{ item.label }}
-      </NuxtLink>
+      <div class="mx-auto flex max-w-5xl gap-1 overflow-x-auto">
+        <NuxtLink
+          v-for="item in navItems"
+          :key="item.href"
+          :to="item.href"
+          class="nav-tab"
+          :class="isActive(item.href) ? 'nav-tab-active' : 'nav-tab-inactive'"
+        >
+          {{ item.label }}
+        </NuxtLink>
+      </div>
     </nav>
   </header>
 </template>

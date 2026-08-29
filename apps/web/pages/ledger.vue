@@ -1,48 +1,44 @@
 <template>
   <div>
-    <header class="mb-6">
-      <h1 class="text-2xl font-bold text-baax-blue-900">دفترکل</h1>
+    <header class="mb-5">
+      <h1 class="page-title">دفترکل</h1>
     </header>
 
     <div v-if="!myFunds.length" class="card text-center">
       <p class="text-sm text-baax-blue-500">عضو هیچ صندوقی نیستید — دفترکل خالی است.</p>
-      <NuxtLink to="/member/browse" class="btn-primary mt-4 inline-block text-sm">پیوستن به صندوق</NuxtLink>
+      <NuxtLink to="/member/browse" class="btn-primary mt-4 inline-flex text-sm">پیوستن به صندوق</NuxtLink>
     </div>
 
     <template v-else>
-      <div class="mb-6 flex flex-wrap gap-2">
+      <div class="mb-5 flex flex-wrap gap-1.5">
         <NuxtLink
           v-for="item in myFunds"
           :key="item.id"
           :to="`/ledger?fund=${item.id}`"
-          class="rounded-full px-4 py-2 text-sm transition"
-          :class="
-            selectedFund?.id === item.id
-              ? 'bg-baax-purple-600 text-white'
-              : 'border border-baax-blue-200 bg-white text-baax-blue-700 hover:bg-baax-blue-50'
-          "
+          class="nav-tab"
+          :class="selectedFund?.id === item.id ? 'nav-tab-active' : 'nav-tab-inactive border border-baax-blue-200 bg-white'"
         >
           {{ item.name.split('—')[0].trim() }}
         </NuxtLink>
       </div>
 
       <template v-if="selectedFund">
-        <div class="card mb-6 flex flex-wrap items-center justify-between gap-4">
+        <div class="card mb-4 flex flex-wrap items-center justify-between gap-4">
           <div>
-            <h2 class="font-bold text-baax-blue-900">{{ selectedFund.name }}</h2>
+            <h2 class="font-display text-base font-bold text-baax-blue-900">{{ selectedFund.name }}</h2>
             <p class="text-sm text-baax-blue-500">
               {{ fundTypeLabel(selectedFund.type) }} · دوره {{ selectedFund.currentCycle }}
             </p>
           </div>
           <div class="text-left">
             <p class="stat-label">مانده</p>
-            <p class="text-xl font-bold text-baax-blue-900">
+            <p class="stat-value-lg mt-0.5">
               {{ formatToman(selectedFund.ledger.at(-1)?.balance ?? 0) }}
             </p>
           </div>
         </div>
 
-        <section v-if="selectedFund.ledger.length" class="card">
+        <section v-if="selectedFund.ledger.length" class="card !p-0 overflow-hidden">
           <LedgerTable :entries="selectedFund.ledger" />
         </section>
         <section v-else class="card text-center">
